@@ -12,6 +12,7 @@ import Typography from 'material-ui/Typography';
 import PropTypes from 'prop-types';
 import AppBar from 'material-ui/AppBar';
 
+
 import LogTab from './LogTab';
 import StorageUnitTab from './StorageUnitTab';
 
@@ -34,7 +35,7 @@ TabContainer.propTypes = {
 const styles = theme => ({
   root: {
     flexGrow: 1,
-    backgroundColor: theme.palette.background.paper,
+    backgroundColor: '#F5F5F5',
   },
 });
 
@@ -57,15 +58,15 @@ class App extends React.Component {
     return (
       <HomePageWrapper>
       <div className={classes.root}>
-      <AppBar position="static">
-      <Tabs centered value={value} onChange={this.handleChange}>
+      <AppBar position="static" style={{backgroundColor: '#F5F5F5'}}>
+      <Tabs centered value={value} onChange={this.handleChange} style={{color: 'black'}}>
       <Tab value='one' label="Log" />
       <Tab value='two' label="Storage Unit" />
       <Tab value='three' label="Rental Truck" />
       </Tabs>
       </AppBar>
-      {value === 'one' && <TabContainer><LogTab /></TabContainer>}
-      {value === 'two' && <TabContainer><StorageUnitTab /></TabContainer>}
+      {value === 'one' && <TabContainer><LogTab/></TabContainer>}
+      {value === 'two' && <TabContainer><StorageUnitTab/></TabContainer>}
       {value === 'three' && <TabContainer>Rental Truck</TabContainer>}
       </div>
       </HomePageWrapper>

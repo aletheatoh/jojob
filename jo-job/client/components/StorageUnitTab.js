@@ -72,6 +72,29 @@ class StorageUnitTab extends React.Component  {
     this.handleClick = this.handleClick.bind(this);
   }
 
+  // handleRequest = (listing_id, customer_id, quantity) => {
+  //   axios({
+  //     method: 'post',
+  //     url: baseLink() + '/api/v1/requests',
+  //     headers: {
+  //       'access-token': localStorage.getItem('access-token'),
+  //       'client': localStorage.getItem('client'),
+  //       'expiry': localStorage.getItem('expiry'),
+  //       'token-type': localStorage.getItem('token-type'),
+  //       'uid': localStorage.getItem('uid')
+  //     },
+  //     data: {
+  //       listing_id: listing_id,
+  //       customer_id: customer_id,
+  //       quantity: quantity,
+  //       approved: false,
+  //       paid: false
+  //     }
+  //   }).then(res => {
+  //     this.props.history.push('/myrequests')
+  //   });
+  // };
+
   handleChange(event) {
     this.setState({ [event.target.name]: event.target.value });
   }
@@ -80,7 +103,7 @@ class StorageUnitTab extends React.Component  {
     var unitSize = this.state.unitSize;
     var order = this.state.order;
 
-    var endpoint = `http://localhost:8000/scrape?order=${order}&unit_size=${unitSize}`;
+    var endpoint = `http://localhost:8000/sparefoot?order=${order}&unit_size=${unitSize}`;
 
     axios.get(endpoint)
     .then(response => {  // <== Change is here

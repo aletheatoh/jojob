@@ -11,7 +11,7 @@ router.get('/', function(req, res){
   res.render('index')
 });
 
-router.get('/scrape', function(req, res){
+router.get('/sparefoot', function(req, res){
 
   var url = 'https://www.sparefoot.com/search.html?location=Durham+NC?searchType=storage';
 
@@ -57,7 +57,7 @@ router.get('/scrape', function(req, res){
 
         reviews = data.find('.review-count').first().text();
         obj['reviews'] = reviews;
-        
+
         // find image
         image = data.find('span.ph-image-wrapper > img').attr('src');
         obj['image'] = image;
@@ -69,6 +69,45 @@ router.get('/scrape', function(req, res){
       })
 
       res.send(json);
+    }
+
+  });
+})
+
+router.get('/uhaul', function(req, res){
+
+  // var url = req.body.url;
+
+  var url = 'https://www.uhaul.com/ReservationsMVC/RatesTrucks/';
+
+
+  request(url, function(error, response, html){
+    var elem;
+
+    if(!error){
+      var $ = cheerio.load(html);
+      var json = { results : []};
+
+      elem = $('h3').first().html();
+      console.log($.html())
+
+      $('#equipmentList > li').each(function(item, idx){
+
+        var obj = {};
+        var data = $(this);
+        // console.log(data.html());
+
+        // get name, address and distance div
+        truckType = data.find('h3').text();
+        obj['truckType'] = truckType;
+
+        json.results.push(obj);
+      })
+
+      res.send({result: elem});
+    }
+    else {
+      console.log('error' + error)
     }
 
   });
