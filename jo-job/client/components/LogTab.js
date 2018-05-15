@@ -11,7 +11,7 @@ import Button from 'material-ui/Button';
 import {CSVLink} from 'react-csv';
 
 import { withStyles } from 'material-ui/styles';
-import Table, { TableBody, TableCell, TableHead, TableRow } from 'material-ui/Table';
+import Table, { TableBody, TableCell, TableHead, TableRow, TableFooter } from 'material-ui/Table';
 
 const headers = [
   {label: 'Name', key: 'name'},
@@ -75,15 +75,7 @@ class LogTab extends React.Component  {
 
     return (
       <div style={{textAlign: 'center'}}>
-      {
-        this.state.cost.map(function(item){
-          return <div id="total-cost" style={{display: 'inline-block', verticalAlign: 'top', width: 150}}>
-          <h4 style={{textAlign: 'center', marginTop: 12, marginBottom: 5, fontSize: 20}}>Total Cost: ${item.total}</h4>
-          <div> Storage: ${item.storage}</div>
-          </div>
-        })
-      }
-      <div style={{textAlign: 'center', display: 'inline-block'}}>
+      <div style={{textAlign: 'center'}}>
       <Add/>
       <CSVLink data={this.state.data} headers={headers}>
           Download me
@@ -91,16 +83,16 @@ class LogTab extends React.Component  {
       </div>
       <div style={{textAlign: 'center'}} class="logtab-container">
       <Table className={classes.table} id="table-to-excel">
-      <TableHead style={{fontSize: 15, color: 'black'}}>
+      <TableHead>
       <TableRow>
-      <TableCell style={{textAlign: 'center'}} className='button-col' ></TableCell>
-      <TableCell style={{textAlign: 'center'}} className='desc-col'>Name</TableCell>
-      <TableCell style={{textAlign: 'center'}} className='button-col' numeric>Boxes</TableCell>
-      <TableCell style={{paddingLeft: 4, paddingRight: 4, textAlign: 'center'}} className='button-col' numeric>Move Out Date</TableCell>
-      <TableCell style={{paddingLeft: 4, paddingRight: 4, textAlign: 'center'}}  className='button-col' numeric>Move In Date</TableCell>
-      <TableCell style={{textAlign: 'center'}}  className='button-col' numeric>Contribution</TableCell>
-      <TableCell style={{textAlign: 'center'}} className='button-col' numeric>Update</TableCell>
-      <TableCell style={{textAlign: 'center'}} className='button-col' numeric>Delete</TableCell>
+      <TableCell style={{textAlign: 'center', fontSize: 14, color: 'black'}} className='button-col' ></TableCell>
+      <TableCell style={{textAlign: 'center', fontSize: 14, color: 'black'}} className='desc-col'>Name</TableCell>
+      <TableCell style={{textAlign: 'center', fontSize: 14, color: 'black'}} className='button-col' numeric>Boxes</TableCell>
+      <TableCell style={{paddingLeft: 4, paddingRight: 4, textAlign: 'center', fontSize: 14, color: 'black'}} className='button-col' numeric>Move Out Date</TableCell>
+      <TableCell style={{paddingLeft: 4, paddingRight: 4, textAlign: 'center', fontSize: 14, color: 'black'}}  className='button-col' numeric>Move In Date</TableCell>
+      <TableCell style={{textAlign: 'center', fontSize: 14, color: 'black'}}  className='button-col' numeric>Contribution</TableCell>
+      <TableCell style={{textAlign: 'center', fontSize: 14, color: 'black'}} className='button-col' numeric>Update</TableCell>
+      <TableCell style={{textAlign: 'center', fontSize: 14, color: 'black'}} className='button-col' numeric>Delete</TableCell>
       </TableRow>
       </TableHead>
       <TableBody>
@@ -108,7 +100,7 @@ class LogTab extends React.Component  {
         this.state.data.map(function(log){
           return  <TableRow>
           <TableCell style={{textAlign: 'center'}} component="th" scope="row" className='counterCell' numeric></TableCell>
-          <TableCell style={{textAlign: 'center', padding: '4px 5px 4px 5px'}} className='desc-col'>
+          <TableCell style={{textAlign: 'center'}} className='desc-col'>
           {log.name}
           </TableCell>
           <TableCell style={{textAlign: 'center'}} className='button-col' numeric>{log.boxes}</TableCell>
@@ -121,6 +113,17 @@ class LogTab extends React.Component  {
         })
       }
       </TableBody>
+      <TableFooter>
+       {
+         this.state.cost.map(function(item){
+           return <TableRow>
+           <TableCell style={{fontSize: 16, color: 'black', padding: 0, paddingRight: 10}} colSpan={1}>Storage: ${item.storage}</TableCell>
+           <TableCell style={{fontSize: 16, color: 'black', padding: 0}} colSpan={2}>Transport: ${item.truck}</TableCell>
+           <TableCell style={{textAlign: 'right', fontSize: 20, fontWeight: 'bold', color: 'black'}} colSpan={5}>Total Cost: ${item.total}</TableCell>
+           </TableRow>
+         })
+       }
+     </TableFooter>
       </Table>
       </div>
       </div>

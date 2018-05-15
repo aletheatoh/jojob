@@ -13,6 +13,8 @@ import EditIcon from 'material-ui-icons/Edit';
 import IconButton from 'material-ui/IconButton';
 import TextField from 'material-ui/TextField';
 
+import { CircularProgress } from 'material-ui/Progress';
+
 import Dialog, {
   DialogActions,
   DialogContent,
@@ -49,7 +51,8 @@ class Update extends React.Component {
       moveOut: '',
       contribution: '',
       messageFromServer: '',
-      modalIsOpen: false
+      modalIsOpen: false,
+      handlingRequest: false
     }
 
     this.update = this.update.bind(this);
@@ -115,6 +118,9 @@ class Update extends React.Component {
   }
 
   onClick(e) {
+    this.setState({
+      handlingRequest: true
+    });
     this.update(this);
   }
 
@@ -133,87 +139,107 @@ class Update extends React.Component {
       }
     }).then(function(response, event) {
       e.setState({
-        messageFromServer: response.data
+        messageFromServer: response.data,
+        handlingRequest: false
       });
     });
   }
 
   render() {
-     const { classes } = this.props;
+    const { classes } = this.props;
 
-    if(this.state.messageFromServer == ''){
-      return (
-        <div>
-        <IconButton color="secondary" onClick={this.openModal} aria-label="edit" style={{marginLeft: 5}}>
+    if (this.state.messageFromServer == ''){
+
+      if (this.state.handlingRequest) {
+        return (
+          <div style={{
+            position: 'absolute',
+            top: '50%',
+            left: '47%',
+            marginTop: '-50px',
+            marginLeft: '-50px',
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: 10
+          }}>
+          <CircularProgress style={{ width: '10vw', height: '10vw' }} />
+          </div>
+        )
+      }
+      else {
+        return (
+          <div>
+          <IconButton color="secondary" onClick={this.openModal} aria-label="edit" style={{marginLeft: 5}}>
           <EditIcon size="small" />
-        </IconButton>
-        <Dialog
+          </IconButton>
+          <Dialog
           className={classes.root}
           open={this.state.modalIsOpen}
           onClose={this.closeModal}
           aria-labelledby="form-dialog-title"
-        >
+          >
           <DialogTitle id="form-dialog-title">Update Entry</DialogTitle>
           <DialogContent>
-            <FormControl className={classes.margin}>
-              <InputLabel style={{textAlign: 'left'}} htmlFor="name">Name</InputLabel>
-              <Input type="text" id="name" name="name" value={this.state.name} onChange={this.handleTextChange}/>
-            </FormControl>
-            <FormControl className={classes.margin}>
-              <InputLabel style={{textAlign: 'left'}} htmlFor="boxes">Boxes</InputLabel>
-              <Input type="number" id="boxes" name="boxes" value={this.state.boxes} onChange={this.handleTextChange}/>
-            </FormControl>
-              <TextField
-                className={classNames(classes.margin, classes.textField)}
-                style={{textAlign: 'left'}}
-                id="moveIn"
-                name="moveIn"
-                label="Move In"
-                type="date"
-                value={this.state.moveIn}
-                defaultValue={this.state.moveIn}
-                onChange={this.handleTextChange}
-                InputLabelProps={{
-                  shrink: true,
-                  textAlign: 'left'
-                }}
-              />
-              <TextField
-                className={classNames(classes.margin, classes.textField)}
-                style={{textAlign: 'left'}}
-                id="moveOut"
-                name="moveOut"
-                label="Move Out"
-                type="date"
-                value={this.state.moveOut}
-                defaultValue={this.state.moveOut}
-                onChange={this.handleTextChange}
-                InputLabelProps={{
-                  shrink: true,
-                  textAlign: 'left'
-                }}
-              />
-            <FormControl className={classes.margin}>
-            <InputLabel style={{textAlign: 'left'}} htmlFor="contribution">Amount</InputLabel>
-              <Input
-                id="contribution"
-                value={this.state.contribution}
-                onChange={this.handleTextChange}
-                startAdornment={<InputAdornment position="start">$</InputAdornment>}
-              />
-            </FormControl>
+          <FormControl className={classes.margin}>
+          <InputLabel style={{textAlign: 'left'}} htmlFor="name">Name</InputLabel>
+          <Input type="text" id="name" name="name" value={this.state.name} onChange={this.handleTextChange}/>
+          </FormControl>
+          <FormControl className={classes.margin}>
+          <InputLabel style={{textAlign: 'left'}} htmlFor="boxes">Boxes</InputLabel>
+          <Input type="number" id="boxes" name="boxes" value={this.state.boxes} onChange={this.handleTextChange}/>
+          </FormControl>
+          <TextField
+          className={classNames(classes.margin, classes.textField)}
+          style={{textAlign: 'left'}}
+          id="moveIn"
+          name="moveIn"
+          label="Move In"
+          type="date"
+          value={this.state.moveIn}
+          defaultValue={this.state.moveIn}
+          onChange={this.handleTextChange}
+          InputLabelProps={{
+            shrink: true,
+            textAlign: 'left'
+          }}
+          />
+          <TextField
+          className={classNames(classes.margin, classes.textField)}
+          style={{textAlign: 'left'}}
+          id="moveOut"
+          name="moveOut"
+          label="Move Out"
+          type="date"
+          value={this.state.moveOut}
+          defaultValue={this.state.moveOut}
+          onChange={this.handleTextChange}
+          InputLabelProps={{
+            shrink: true,
+            textAlign: 'left'
+          }}
+          />
+          <FormControl className={classes.margin}>
+          <InputLabel style={{textAlign: 'left'}} htmlFor="contribution">Amount</InputLabel>
+          <Input
+          id="contribution"
+          value={this.state.contribution}
+          onChange={this.handleTextChange}
+          startAdornment={<InputAdornment position="start">$</InputAdornment>}
+          />
+          </FormControl>
           </DialogContent>
           <DialogActions>
-            <Button onClick={this.closeModal} color="primary">
-              Cancel
-            </Button>
-            <Button onClick={this.onClick} color="primary">
-              Update
-            </Button>
+          <Button onClick={this.closeModal} color="primary">
+          Cancel
+          </Button>
+          <Button onClick={this.onClick} color="primary">
+          Update
+          </Button>
           </DialogActions>
-        </Dialog>
-        </div>
-      )
+          </Dialog>
+          </div>
+        )
+      }
     }
     else{
       return (
@@ -221,22 +247,22 @@ class Update extends React.Component {
         <Dialog
         open={this.state.modalIsOpen}
         onClose={this.closeModal}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
         >
-          <DialogTitle id="alert-dialog-title">{"Success!"}</DialogTitle>
-          <DialogContent>
-            <DialogContentText id="alert-dialog-description">
-              {this.state.messageFromServer}
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Link to={{pathname: '/', search: '' }} style={{ textDecoration: 'none' }}>
-            <Button onClick={this.closeModal} color="primary">
-              Close
-            </Button>
-            </Link>
-          </DialogActions>
+        <DialogTitle id="alert-dialog-title">{"Success!"}</DialogTitle>
+        <DialogContent>
+        <DialogContentText id="alert-dialog-description">
+        {this.state.messageFromServer}
+        </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+        <Link to={{pathname: '/', search: '' }} style={{ textDecoration: 'none' }}>
+        <Button onClick={this.closeModal} color="primary">
+        Close
+        </Button>
+        </Link>
+        </DialogActions>
         </Dialog>
         </div>
       )

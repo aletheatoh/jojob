@@ -16,8 +16,6 @@ router.get('/sparefoot', function(req, res){
 
   var url = 'https://www.sparefoot.com/search.html?location=Durham+NC?searchType=storage';
 
-  // url = 'https://www.sparefoot.com/search.html?location=Charlotte+NC&searchType=storage&order=price&page=1&sqft=87-125&listingsPerPage=15';
-
   if (req.query.order != undefined) {
     url += `&order=${req.query.order}`;
   }
@@ -216,8 +214,7 @@ router.route('/update')
   };
   console.log(doc);
   Log.update({_id: req.body._id}, doc, function(err, result) {
-    if (err)
-    res.send(err);
+    if (err) res.send(err);
     res.send('Log successfully updated!');
   });
 });
@@ -225,9 +222,38 @@ router.route('/update')
 router.get('/delete', function(req, res){
   var id = req.query.id;
   Log.find({_id: id}).remove().exec(function(err, log) {
-    if(err)
-    res.send("error " + err)
-    res.send('Log successfully deleted!');
+    if(err) res.send("error " + err)
+
+    // update contributions here
+    TotalCost.find({}, function(err, costs) {
+      if (err) res.send("error " + err);
+
+      var totalCost = costs[0].total;
+      // update distributed contributions
+      Log.count({}, function (err, count) {
+        console.log('count is' + count);
+
+        if (count > 0) {
+          var numPeople = count;
+          var contribution = parseFloat(totalCost) / numPeople;
+
+          // Log.updateMany({}, {$set: {contribution: req.body.total / numPeople}})
+          Log.updateMany({}, {
+            $set: {
+              contribution: contribution
+            }
+          }, {
+            multi: true
+          },
+          function(err, result) {
+            if (err) res.send("error " + err);
+            console.log('deleted')
+            res.send('Log successfully deleted!');
+          })
+        }
+        else res.send('Log successfully deleted!');
+      });
+    });
   })
 });
 
