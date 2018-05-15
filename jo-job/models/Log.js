@@ -5,7 +5,8 @@ var logSchema = new Schema({
   name: String,
   boxes: Number,
   moveIn: String,
-  moveOut: String
+  moveOut: String,
+  contribution: Number
 });
 
 module.exports = mongoose.model('Log', logSchema);

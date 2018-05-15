@@ -33,10 +33,28 @@ TabContainer.propTypes = {
 };
 
 const styles = theme => ({
-  root: {
-    flexGrow: 1,
-    backgroundColor: '#F5F5F5',
+  // tabsRoot: {
+  //   backgroundColor: 'rgba(255, 251, 151, 0.79)',
+  // },
+  tabsIndicator: {
+    backgroundColor: 'red',
   },
+  tabRoot: {
+    marginRight: theme.spacing.unit * 3,
+    '&:hover': {
+      color: '#FF6D00',
+      opacity: 1,
+    },
+    '&$tabSelected': {
+      color: '#FF6D00'
+    },
+    '&:focus': {
+      color: '#FF6D00',
+    },
+    color: '#212121',
+    opacity: 1
+  },
+  tabSelected: {},
 });
 
 class App extends React.Component {
@@ -57,12 +75,12 @@ class App extends React.Component {
 
     return (
       <HomePageWrapper>
-      <div className={classes.root}>
-      <AppBar position="static" style={{backgroundColor: '#F5F5F5'}}>
-      <Tabs centered value={value} onChange={this.handleChange} style={{color: 'black'}}>
-      <Tab value='one' label="Log" />
-      <Tab value='two' label="Storage Unit" />
-      <Tab value='three' label="Rental Truck" />
+      <div>
+      <AppBar position="static" style={{backgroundColor: 'rgba(255, 251, 151, 0.79)'}}>
+      <Tabs style={{fontSize: 18}} centered value={value} onChange={this.handleChange} classes={{ indicator: classes.tabsIndicator }}>
+      <Tab value='one' label="Bookkeeping" classes={{ root: classes.tabRoot, selected: classes.tabSelected }}/>
+      <Tab value='two' label="Storage Unit" classes={{ root: classes.tabRoot, selected: classes.tabSelected }}/>
+      <Tab value='three' label="Rental Truck" classes={{ root: classes.tabRoot, selected: classes.tabSelected }}/>
       </Tabs>
       </AppBar>
       {value === 'one' && <TabContainer><LogTab/></TabContainer>}

@@ -1,12 +1,41 @@
 import React from 'react';
-import Modal from 'react-modal';
+
 import axios from 'axios';
-import { Button } from 'react-bootstrap';
+import classNames from 'classnames';
+import PropTypes from 'prop-types';
+import { withStyles } from 'material-ui/styles';
+import styled from 'styled-components';
+import Button from 'material-ui/Button';
 import { Link } from 'react-router-dom';
 var querystring = require('querystring');
 
 import EditIcon from 'material-ui-icons/Edit';
 import IconButton from 'material-ui/IconButton';
+import TextField from 'material-ui/TextField';
+
+import Dialog, {
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from 'material-ui/Dialog';
+
+import Input, { InputLabel, InputAdornment } from 'material-ui/Input';
+
+import { FormControl } from 'material-ui/Form';
+
+const styles = theme => ({
+  root: {
+    display: 'flex',
+    flexWrap: 'wrap',
+  },
+  margin: {
+    margin: theme.spacing.unit,
+  },
+  textField: {
+    flexBasis: 200,
+  },
+});
 
 class Update extends React.Component {
 
@@ -18,6 +47,7 @@ class Update extends React.Component {
       boxes: '',
       moveIn: '',
       moveOut: '',
+      contribution: '',
       messageFromServer: '',
       modalIsOpen: false
     }
@@ -36,6 +66,7 @@ class Update extends React.Component {
       boxes: this.props.log.boxes,
       moveOut: this.props.log.moveOut,
       moveIn: this.props.log.moveIn,
+      contribution: this.props.log.contribution,
     });
   }
 
@@ -45,7 +76,7 @@ class Update extends React.Component {
     });
   }
 
-  closeModal() {
+  closeModal(e) {
     this.setState({
       modalIsOpen: false,
       messageFromServer: ''
@@ -75,6 +106,12 @@ class Update extends React.Component {
         moveOut: e.target.value
       });
     }
+
+    if (e.target.name == "contribution") {
+      this.setState({
+        contribution: e.target.value
+      });
+    }
   }
 
   onClick(e) {
@@ -88,12 +125,13 @@ class Update extends React.Component {
       name: e.state.name,
       boxes: e.state.boxes,
       moveIn: e.state.moveIn,
-      moveOut: e.state.moveOut
+      moveOut: e.state.moveOut,
+      contribution: e.state.contribution
     }), {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded"
       }
-    }).then(function(response) {
+    }).then(function(response, event) {
       e.setState({
         messageFromServer: response.data
       });
@@ -101,55 +139,112 @@ class Update extends React.Component {
   }
 
   render() {
+     const { classes } = this.props;
+
     if(this.state.messageFromServer == ''){
       return (
         <div>
-        <IconButton color="secondary" onClick={this.openModal} aria-label="edit" >
+        <IconButton color="secondary" onClick={this.openModal} aria-label="edit" style={{marginLeft: 5}}>
           <EditIcon size="small" />
         </IconButton>
-        <Modal
-        isOpen={this.state.modalIsOpen}
-        onRequestClose={this.closeModal}
-        contentLabel="Add Log"
-        className="Modal">
-        <Link to={{pathname: '/', search: '' }} style={{ textDecoration: 'none' }}>
-        <Button bsStyle="danger" bsSize="mini" onClick={this.closeModal}><span className="closebtn glyphicon glyphicon-remove"></span></Button>
-        </Link><br/>
-        <fieldset>
-        <label for="name">Name:</label><input type="text" id="name" name="name" value={this.state.name} onChange={this.handleTextChange}></input>
-        <label for="boxes">Boxes:</label><input type="number" id="boxes" name="boxes" value={this.state.boxes} onChange={this.handleTextChange}></input>
-        <label for="moveOut">Move Out:</label><input type="date" id="moveOut" name="moveOut" value={this.state.moveOut} onChange={this.handleTextChange}></input>
-        <label for="moveIn">Move In:</label><input type="date" id="moveIn" name="moveIn" value={this.state.moveIn} onChange={this.handleTextChange}></input>
-
-        </fieldset>
-        <div className='button-center'>
-        <br/>
-        <Button bsStyle="warning" bsSize="small" onClick={this.onClick}>Update</Button>
-        </div>
-        </Modal>
+        <Dialog
+          className={classes.root}
+          open={this.state.modalIsOpen}
+          onClose={this.closeModal}
+          aria-labelledby="form-dialog-title"
+        >
+          <DialogTitle id="form-dialog-title">Update Entry</DialogTitle>
+          <DialogContent>
+            <FormControl className={classes.margin}>
+              <InputLabel style={{textAlign: 'left'}} htmlFor="name">Name</InputLabel>
+              <Input type="text" id="name" name="name" value={this.state.name} onChange={this.handleTextChange}/>
+            </FormControl>
+            <FormControl className={classes.margin}>
+              <InputLabel style={{textAlign: 'left'}} htmlFor="boxes">Boxes</InputLabel>
+              <Input type="number" id="boxes" name="boxes" value={this.state.boxes} onChange={this.handleTextChange}/>
+            </FormControl>
+              <TextField
+                className={classNames(classes.margin, classes.textField)}
+                style={{textAlign: 'left'}}
+                id="moveIn"
+                name="moveIn"
+                label="Move In"
+                type="date"
+                value={this.state.moveIn}
+                defaultValue={this.state.moveIn}
+                onChange={this.handleTextChange}
+                InputLabelProps={{
+                  shrink: true,
+                  textAlign: 'left'
+                }}
+              />
+              <TextField
+                className={classNames(classes.margin, classes.textField)}
+                style={{textAlign: 'left'}}
+                id="moveOut"
+                name="moveOut"
+                label="Move Out"
+                type="date"
+                value={this.state.moveOut}
+                defaultValue={this.state.moveOut}
+                onChange={this.handleTextChange}
+                InputLabelProps={{
+                  shrink: true,
+                  textAlign: 'left'
+                }}
+              />
+            <FormControl className={classes.margin}>
+            <InputLabel style={{textAlign: 'left'}} htmlFor="contribution">Amount</InputLabel>
+              <Input
+                id="contribution"
+                value={this.state.contribution}
+                onChange={this.handleTextChange}
+                startAdornment={<InputAdornment position="start">$</InputAdornment>}
+              />
+            </FormControl>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={this.closeModal} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={this.onClick} color="primary">
+              Update
+            </Button>
+          </DialogActions>
+        </Dialog>
         </div>
       )
     }
     else{
       return (
         <div>
-        <Button bsStyle="warning" bsSize="small" onClick={this.openModal}><span className="glyphicon glyphicon-edit"></span></Button>
-        <Modal
-        isOpen={this.state.modalIsOpen}
-        onAfterOpen={this.afterOpenModal}
-        onRequestClose={this.closeModal}
-        contentLabel="Add Log"
-        className="Modal">
-        <div className='button-center'>
-        <h3>{this.state.messageFromServer}</h3>
-        <Link to={{pathname: '/', search: '' }} style={{ textDecoration: 'none' }}>
-        <Button bsStyle="success" bsSize="mini" onClick={this.closeModal}>Close the Dialog</Button>
-        </Link>
-        </div>
-        </Modal>
+        <Dialog
+        open={this.state.modalIsOpen}
+        onClose={this.closeModal}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">{"Success!"}</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              {this.state.messageFromServer}
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Link to={{pathname: '/', search: '' }} style={{ textDecoration: 'none' }}>
+            <Button onClick={this.closeModal} color="primary">
+              Close
+            </Button>
+            </Link>
+          </DialogActions>
+        </Dialog>
         </div>
       )
     }
   }
 }
-export default Update;
+Update.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(Update);

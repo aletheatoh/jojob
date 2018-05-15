@@ -5,8 +5,10 @@ import Select from 'material-ui/Select';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {Link} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import axios from 'axios';
+var querystring = require('querystring');
 
 import { withStyles } from 'material-ui/styles';
 import styled from 'styled-components';
@@ -14,6 +16,7 @@ import Table, { TableBody, TableCell, TableHead, TableRow } from 'material-ui/Ta
 import Card, { CardActions, CardContent, CardMedia } from 'material-ui/Card';
 import Button from 'material-ui/Button';
 import Typography from 'material-ui/Typography';
+import PhoneIcon from 'material-ui-icons/Phone';
 
 import { comparePrice, compareReviews } from './helpers'
 
@@ -70,33 +73,27 @@ class StorageUnitTab extends React.Component  {
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleClick = this.handleClick.bind(this);
+    this.addToLog = this.addToLog.bind(this);
   }
-
-  // handleRequest = (listing_id, customer_id, quantity) => {
-  //   axios({
-  //     method: 'post',
-  //     url: baseLink() + '/api/v1/requests',
-  //     headers: {
-  //       'access-token': localStorage.getItem('access-token'),
-  //       'client': localStorage.getItem('client'),
-  //       'expiry': localStorage.getItem('expiry'),
-  //       'token-type': localStorage.getItem('token-type'),
-  //       'uid': localStorage.getItem('uid')
-  //     },
-  //     data: {
-  //       listing_id: listing_id,
-  //       customer_id: customer_id,
-  //       quantity: quantity,
-  //       approved: false,
-  //       paid: false
-  //     }
-  //   }).then(res => {
-  //     this.props.history.push('/myrequests')
-  //   });
-  // };
 
   handleChange(event) {
     this.setState({ [event.target.name]: event.target.value });
+  }
+
+  addToLog(price) {
+    const priceFloat = parseFloat(price.replace('$',''));
+    console.log(priceFloat)
+    axios.post('/addCost',
+    querystring.stringify({
+      total: priceFloat,
+      storage: priceFloat
+    }), {
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      }
+    }).then(function(response) {
+      console.log('success')
+    });
   }
 
   handleClick(event) {
@@ -149,39 +146,42 @@ class StorageUnitTab extends React.Component  {
               <Typography gutterBottom variant="headline" component="h2">
                 {result.name}
               </Typography>
-              <Typography gutterBottom variant="subheading" color="textSecondary">
+              <Typography style={{display: 'inline-block'}} gutterBottom variant="subheading" color="textSecondary">
                 {result.address}
               </Typography>
+              <Typography style={{display: 'inline-block'}} gutterBottom variant="subheading" color='black'>
+                <PhoneIcon style={{verticalAlign: 'middle'}} size="large"/> {result.contact}
+              </Typography>
               <ResultDetail>
-              <h5 style={{fontWeight: 'bold'}}>Distance</h5>
+              <h5 style={{fontWeight: 'bold', marginTop: 8, marginBottom: 6}}>Distance</h5>
               <Typography component="p">
                 {result.distance}
               </Typography>
               </ResultDetail>
               <ResultDetail>
-              <h5 style={{fontWeight: 'bold'}}>Price</h5>
+              <h5 style={{fontWeight: 'bold', marginTop: 8, marginBottom: 6}}>Price</h5>
               <Typography component="p">
                 {result.price}
               </Typography>
               </ResultDetail>
               <ResultDetail>
-              <h5 style={{fontWeight: 'bold'}}>Reviews</h5>
+              <h5 style={{fontWeight: 'bold', marginTop: 8, marginBottom: 6}}>Reviews</h5>
               <Typography component="p">
                 {reviews}
               </Typography>
               </ResultDetail>
               <ResultDetail>
-              <h5 style={{fontWeight: 'bold'}}>Promotion</h5>
+              <h5 style={{fontWeight: 'bold', marginTop: 8, marginBottom: 6}}>Promotion</h5>
               <Typography component="p">
                 {promotion}
               </Typography>
               </ResultDetail>
             </CardContent>
             <CardActions style={{textAlign: 'right'}}>
-              <Button size="small" color="primary">
-                {result.contact}
+              <Button onClick={() => this.addToLog(result.price)} style={{textAlign: 'right'}} size="small" color="primary">
+                Add to Log
               </Button>
-              <Button size="small" color="primary" href={result.link} target="_blank">
+              <Button style={{textAlign: 'right'}} size="small" color="primary" href={result.link} target="_blank">
                 Learn More
               </Button>
             </CardActions>

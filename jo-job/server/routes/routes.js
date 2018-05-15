@@ -6,6 +6,7 @@ var cheerio = require('cheerio');
 var router = express.Router();
 var bodyParser = require('body-parser');
 var Log = require('../../models/Log');
+var TotalCost = require('../../models/TotalCost');
 
 router.get('/', function(req, res){
   res.render('index')
@@ -120,12 +121,89 @@ router.route('/insert')
   log.boxes = req.body.boxes;
   log.moveIn = req.body.moveIn;
   log.moveOut = req.body.moveOut;
+  log.contribution = 0; // let's initilize as 0 first
   log.save(function(err) {
-    if (err)
-    res.send(err);
-    res.send('Log successfully added!');
+    if (err) res.send(err);
+
+    // update contributions here
+    TotalCost.find({}, function(err, costs) {
+      if (err) res.send("error " + err);
+
+      var totalCost = costs[0].total;
+      // update distributed contributions
+      Log.count({}, function (err, count) {
+
+        var numPeople = count;
+        var contribution = parseFloat(totalCost) / numPeople;
+
+        // Log.updateMany({}, {$set: {contribution: req.body.total / numPeople}})
+        Log.updateMany({}, {
+          $set: {
+            contribution: contribution
+          }
+        }, {
+          multi: true
+        },
+        function(err, result) {
+          if (err) res.send("error " + err);
+
+          res.send('Log successfully added!');
+        })
+      });
+    });
   });
 })
+
+// add a new total cost
+router.route('/addCost')
+.post(function(req,res) {
+  // first remove all previous costs
+  TotalCost.remove({}, function(err, cost) {
+    if (err)
+    res.send(err);
+
+    // then replace with new cost
+    var totalCost = new TotalCost();
+    totalCost.total = req.body.total;
+    totalCost.storage = req.body.storage;
+    totalCost.truck = 0;
+
+    // update distributed contributions
+    Log.count({}, function (err, count) {
+
+      var numPeople = count;
+      var contribution = parseFloat(req.body.total) / numPeople;
+
+      // Log.updateMany({}, {$set: {contribution: req.body.total / numPeople}})
+      Log.updateMany({}, {
+        $set: {
+          contribution: contribution
+        }
+      }, {
+        multi: true
+      },
+      function(err, result) {
+        console.log(result);
+        console.log(err);
+
+        totalCost.save(function(err) {
+          if (err)
+          res.send(err);
+          res.send('Total Cost successfully added!');
+        });
+      })
+    });
+  });
+})
+
+// get the total cost
+router.get('/getCost',function(req, res) {
+  TotalCost.find({}, function(err, cost) {
+    if (err)
+    res.send(err);
+    res.json(cost);
+  });
+});
 
 router.route('/update')
 .post(function(req, res) {
@@ -134,6 +212,7 @@ router.route('/update')
     boxes: req.body.boxes,
     moveIn: req.body.moveIn,
     moveOut: req.body.moveOut,
+    contribution: req.body.contribution,
   };
   console.log(doc);
   Log.update({_id: req.body._id}, doc, function(err, result) {
@@ -145,9 +224,9 @@ router.route('/update')
 
 router.get('/delete', function(req, res){
   var id = req.query.id;
-  Log.find({_id: id}).remove().exec(function(err, expense) {
+  Log.find({_id: id}).remove().exec(function(err, log) {
     if(err)
-    res.send(err)
+    res.send("error " + err)
     res.send('Log successfully deleted!');
   })
 });

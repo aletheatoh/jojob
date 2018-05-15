@@ -28,7 +28,7 @@
 }
 
 html {
-  font-size: 18px;
+  /* font-size: 18px; */
 }
 
 body {
@@ -37,15 +37,7 @@ body {
 
 header {
   margin: 0;
-  padding: 10px;
-  background-color: #FFCC80;
-}
-
-#header-container {
-  margin: 0 auto;
-  text-align: center;
-  width: 300px;
-  padding: 0;
+  padding: 20px;
 }
 
 div.jss71.jss80 {
@@ -53,7 +45,10 @@ div.jss71.jss80 {
 }
 
 #logo {
-  height: 100px;
+  height: 80px;
+  position: absolute;
+  margin-top: 3px;
+  margin-left: 25px;
 }
 
 h1 {
@@ -67,11 +62,10 @@ h1 {
 }
 
 .button-col {
-  text-align:center;
+  padding: 0;
 }
 
 .desc-col {
-  width:200px;
   text-align:left;
 }
 
@@ -86,14 +80,13 @@ table {
 
 .counterCell {
   text-align: center;
-  width: 50px;
 }
 
 .button-center {
   text-align: center;
 }
 
-.Modal {
+/* .Modal {
   position: relative;
   top: 250px;
   left: 400px;
@@ -104,7 +97,7 @@ table {
   border: 1px solid #000;
   border-radius: 4px;
   padding: 20px;
-}
+} */
 
 .Overlay {
   position: fixed;

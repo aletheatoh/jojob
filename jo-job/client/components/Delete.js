@@ -29,13 +29,12 @@ class Delete extends React.Component {
   delete(e){
     axios.get('/delete?id='+e.state.id)
     .then(function(response, event) {
-      event.preventDefault();
     });
   }
 
   render(){
     return (
-      <IconButton color="primary" onClick={this.onClick} aria-label="delete" >
+      <IconButton color="primary" onClick={this.onClick} aria-label="delete" style={{marginLeft: 5}}>
         <Link to={{pathname: '/', search: '' }} style={{ textDecoration: 'none' }}>
         <DeleteIcon size="small" />
         </Link>
