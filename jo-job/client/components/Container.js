@@ -9,6 +9,8 @@ import snapToGrid from './snapToGrid'
 
 import shallowEqual from 'shallowequal'
 
+import { CircularProgress } from 'material-ui/Progress';
+
 const styles = {
 	width: 370,
 	height: 370,
@@ -65,7 +67,8 @@ class Container extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			alreadyUpdated: false
+			alreadyUpdated: false,
+			logsLoaded: false
 		}
 	}
 
@@ -74,11 +77,17 @@ class Container extends Component {
 	 // Adjust scroll so these new items don't push the old ones out of view.
 	 // (snapshot here is the value returned from getSnapshotBeforeUpdate)
 	 if (snapshot !== null) {
-		 if (this.state.alreadyUpdated === false) {
+		 if (this.state.alreadyUpdated === false && this.state.logsLoaded === false) {
 			 this.setState({
-				 	alreadyUpdated: true,
 					logs: this.props.logs,
-					boxes: getBoxes(this.props.logs)
+					logsLoaded: true
+				});
+		 }
+		 if (this.state.alreadyUpdated === false && this.state.logsLoaded === true) {
+			 console.log('logs loaded')
+			 this.setState({
+					boxes: getBoxes(this.state.logs),
+					alreadyUpdated: true
 				});
 		 }
 	 }
@@ -102,17 +111,24 @@ class Container extends Component {
 
 	render() {
 		const { connectDropTarget } = this.props;
-		const { boxes } = this.state;
 
-		if (this.state.alreadyUpdated == true) {
+		if (this.state.alreadyUpdated === true) {
 			return connectDropTarget(
 				<div style={styles}>
-					{Object.keys(boxes).map(key => this.renderBox(boxes[key], key))}
+					{Object.keys(this.state.boxes).map(key => this.renderBox(this.state.boxes[key], key))}
 				</div>,
 			)
 		}
 		else {
-			return <div>Loading</div>
+			return (
+				<div style={{
+					justifyContent: 'center',
+					alignItems: 'center',
+					zIndex: 10
+				}}>
+				<CircularProgress style={{ width: '5vw', height: '5vw', textAlign: 'center' }} />
+				</div>
+			)
 		}
 	}
 }

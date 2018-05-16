@@ -8,7 +8,7 @@ import Delete from './Delete';
 
 import Button from 'material-ui/Button';
 import IconButton from 'material-ui/IconButton';
-import DownloadIcon from 'material-ui-icons/ImportExport';
+import DownloadIcon from 'material-ui-icons/Save';
 
 import {CSVLink} from 'react-csv';
 
@@ -16,10 +16,10 @@ import { withStyles } from 'material-ui/styles';
 import Table, { TableBody, TableCell, TableHead, TableRow, TableFooter } from 'material-ui/Table';
 
 const headers = [
-  {label: 'Name', key: 'name'},
-  {label: 'Boxes', key: 'boxes'},
-  {label: 'Move In', key: 'moveIn'},
-  {label: 'Move Out', key: 'moveOut'},
+  {label: 'Name', key: 'Name'},
+  {label: 'Boxes', key: 'Boxes'},
+  {label: 'Move In', key: 'Move In'},
+  {label: 'Move Out', key: 'Move Out'},
 ];
 
 const styles = theme => ({
@@ -80,11 +80,13 @@ class LogTab extends React.Component  {
       <div style={{textAlign: 'center'}}>
       <div style={{textAlign: 'center'}}>
       <Add/>
+      <div style={{display: 'inline-block', paddingLeft: 10}}>
       <CSVLink data={this.state.data} headers={headers}>
-      <IconButton backgroundColor="secondary" aria-label="download" >
+      <Button variant="fab" color="secondary" aria-label="download" >
       <DownloadIcon size="large" />
-      </IconButton>
+      </Button>
       </CSVLink>
+      </div>
       </div>
       <div style={{textAlign: 'center'}} class="logtab-container">
       <Table className={classes.table} id="table-to-excel">

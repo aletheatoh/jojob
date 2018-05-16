@@ -74,7 +74,7 @@ class App extends React.Component {
     return (
       <HomePageWrapper>
       <div>
-      <AppBar position="static" style={{backgroundColor: 'rgba(255, 251, 151, 0.79)'}}>
+      <AppBar position="static" style={{backgroundColor: 'rgba(255, 251, 151, 0.70)'}}>
       <Tabs style={{fontSize: 18}} centered value={value} onChange={this.handleChange} classes={{ indicator: classes.tabsIndicator }}>
       <Tab value='one' label="Bookkeeping" classes={{ root: classes.tabRoot, selected: classes.tabSelected }}/>
       <Tab value='two' label="Storage Unit" classes={{ root: classes.tabRoot, selected: classes.tabSelected }}/>

@@ -151,10 +151,10 @@ class Add extends React.Component {
       }
       else {
         return (
-          <div>
-          <IconButton backgroundColor="secondary" onClick={this.openModal} aria-label="add" >
+          <div style={{display: 'inline-block'}}>
+          <Button variant="fab" color="primary" onClick={this.openModal} aria-label="add" >
           <AddIcon size="large" />
-          </IconButton>
+          </Button>
           <Dialog
           className={classes.root}
           open={this.state.modalIsOpen}

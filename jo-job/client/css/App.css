@@ -44,6 +44,10 @@ div.jss71.jss80 {
   background-color: white;
 }
 
+#list-heading > div > h3 {
+  font-weight: bold;
+}
+
 #logo {
   height: 80px;
   position: absolute;

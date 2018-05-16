@@ -58,7 +58,7 @@ const styles = theme => ({
     marginTop: theme.spacing.unit * 2,
   },
   card: {
-    maxWidth: 600,
+    maxWidth: 500,
   },
   margin: {
     margin: theme.spacing.unit,
@@ -155,9 +155,12 @@ class RentalTruckTab extends React.Component  {
     const renderData = this.state.data ? (
       this.state.data.map((result, index) => {
 
+        const img = '../img/' + result.truckType + '.png';
+
         return (
           <SearchResults>
           <Card style={{margin: '0 auto'}} className={classes.card}>
+          <div style={{display: 'inline-block'}}>
           <CardContent>
           <Typography gutterBottom variant="headline" component="h2">
           {result.truckType}
@@ -176,6 +179,14 @@ class RentalTruckTab extends React.Component  {
           + {result.mileCharge}
           </Typography>
           </CardContent>
+          </div>
+          <div style={{display: 'inline-block'}}>
+          <CardMedia
+            image={img}
+            title="Live from space album cover"
+            style={{width: 80}}
+          />
+          </div>
           <CardActions style={{textAlign: 'right'}}>
           <Button onClick={() => this.addToLog(result.price)} size="small" color="primary">
           Add to Log
@@ -215,11 +226,11 @@ class RentalTruckTab extends React.Component  {
       return (
         <div>
         <SearchBox>
-        <form className={classes.root} autoComplete="off">
+        <form className={classes.root} autoComplete="off" style={{margin: '0 auto'}}>
 
         <TextField
         className={classNames(classes.margin, classes.textField)}
-        style={{textAlign: 'left'}}
+        style={{textAlign: 'center', margin: '0 auto'}}
         id="pickUp"
         name="pickUp"
         label="Pickup Date"

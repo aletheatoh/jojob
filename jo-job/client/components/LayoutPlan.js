@@ -87,10 +87,13 @@ class LayoutPlan extends React.Component  {
       <div>
       <div style={{textAlign: 'center', width: 280, display: 'inline-block', verticalAlign: 'top'}}>
       <List>
-      <ListItem>
+      <ListItem id="list-heading">
       <ListItemText
       primary="No. of Boxes"
       className={classes.list}
+      style={{
+        fontWeight: 500
+      }}
       />
       </ListItem>
       {ListContainer}
