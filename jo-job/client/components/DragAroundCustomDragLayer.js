@@ -46,7 +46,8 @@ class DragAroundCustomDragLayer extends Component {
 				<h3>{this.state.title}</h3>
 				<Container snapToGrid={snapToGridAfterDrop} logs={this.state.logs}/>
 				<CustomDragLayer snapToGrid={snapToGridWhileDragging} />
-				<p style={{textAlign: 'center', paddingTop: 5}}>
+				<p style={{textAlign: 'center', paddingTop: 2}}><b>Entrance</b></p>
+				<p style={{textAlign: 'center', paddingTop: 3}}>
 					<label htmlFor="snapToGridWhileDragging">
 						<input
 							id="snapToGridWhileDragging"

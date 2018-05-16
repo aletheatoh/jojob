@@ -7,6 +7,8 @@ import Update from './Update'
 import Delete from './Delete';
 
 import Button from 'material-ui/Button';
+import IconButton from 'material-ui/IconButton';
+import DownloadIcon from 'material-ui-icons/ImportExport';
 
 import {CSVLink} from 'react-csv';
 
@@ -79,7 +81,9 @@ class LogTab extends React.Component  {
       <div style={{textAlign: 'center'}}>
       <Add/>
       <CSVLink data={this.state.data} headers={headers}>
-      Download me
+      <IconButton backgroundColor="secondary" aria-label="download" >
+      <DownloadIcon size="large" />
+      </IconButton>
       </CSVLink>
       </div>
       <div style={{textAlign: 'center'}} class="logtab-container">

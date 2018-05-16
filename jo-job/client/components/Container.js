@@ -10,7 +10,7 @@ import snapToGrid from './snapToGrid'
 import shallowEqual from 'shallowequal'
 
 const styles = {
-	width: 200,
+	width: 370,
 	height: 370,
 	border: '1px solid black',
 	position: 'relative',
