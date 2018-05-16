@@ -30,8 +30,10 @@ class DragAroundCustomDragLayer extends Component {
 	 if (snapshot !== null) {
 		 if (this.state.alreadyUpdated === false) {
 			 this.setState({alreadyUpdated: true});
-			 this.setState({ logs: this.props.logs });
-			 console.log(this.props.logs)
+			 this.setState({
+				 logs: this.props.logs,
+				 title: this.props.title
+			 });
 		 }
 	 }
  }
@@ -40,10 +42,11 @@ class DragAroundCustomDragLayer extends Component {
 		const { snapToGridAfterDrop, snapToGridWhileDragging } = this.state
 
 		return (
-			<div>
+			<div style={{display: 'inline-block', marginLeft: 50}}>
+				<h3>{this.state.title}</h3>
 				<Container snapToGrid={snapToGridAfterDrop} logs={this.state.logs}/>
 				<CustomDragLayer snapToGrid={snapToGridWhileDragging} />
-				<p style={{margin: '0 auto', textAlign: 'center', paddingTop: 5}}>
+				<p style={{textAlign: 'center', paddingTop: 5}}>
 					<label htmlFor="snapToGridWhileDragging">
 						<input
 							id="snapToGridWhileDragging"

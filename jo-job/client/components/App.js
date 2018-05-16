@@ -14,7 +14,7 @@ import AppBar from 'material-ui/AppBar';
 
 import LogTab from './LogTab';
 import StorageUnitTab from './StorageUnitTab';
-
+import RentalTruckTab from './RentalTruckTab';
 import LayoutPlan from './LayoutPlan';
 
 const HomePageWrapper = styled.main`
@@ -84,7 +84,7 @@ class App extends React.Component {
       </AppBar>
       {value === 'one' && <TabContainer><LogTab/></TabContainer>}
       {value === 'two' && <TabContainer><StorageUnitTab/></TabContainer>}
-      {value === 'three' && <TabContainer>Rental Truck</TabContainer>}
+      {value === 'three' && <TabContainer><RentalTruckTab/></TabContainer>}
       {value === 'four' && <TabContainer><LayoutPlan/></TabContainer>}
       </div>
       </HomePageWrapper>

@@ -10,11 +10,10 @@ import snapToGrid from './snapToGrid'
 import shallowEqual from 'shallowequal'
 
 const styles = {
-	width: 300,
-	height: 300,
+	width: 200,
+	height: 370,
 	border: '1px solid black',
 	position: 'relative',
-	margin: '0 auto',
 	paddingTop: 10
 }
 
@@ -43,14 +42,15 @@ function collect(connect) {
 
 function getBoxes(logs) {
 	var boxes = {};
-	var alph = ['a', 'b', 'c', 'd'];
-	logs.map(function(log, index){
-		boxes[alph[index]] = {
-			top: 10,
-			bottom: 50,
+
+	logs.forEach(function(log, index){
+		boxes[log._id] = {
+			top: 10 * (index+8),
+			left: 40,
 			title: log.name
 		}
-	})
+
+	});
 
 	return boxes;
 }
@@ -65,9 +65,6 @@ class Container extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			boxes: {
-				a: {top: 20, left: 50, title: 'title'}
-			},
 			alreadyUpdated: false
 		}
 	}
@@ -78,12 +75,11 @@ class Container extends Component {
 	 // (snapshot here is the value returned from getSnapshotBeforeUpdate)
 	 if (snapshot !== null) {
 		 if (this.state.alreadyUpdated === false) {
-			 this.setState({alreadyUpdated: true});
 			 this.setState({
-				 logs: this.props.logs,
-				 boxes: getBoxes(this.props.logs)
-			  });
-			 console.log("received props again: " + this.props.logs)
+				 	alreadyUpdated: true,
+					logs: this.props.logs,
+					boxes: getBoxes(this.props.logs)
+				});
 		 }
 	 }
  }
@@ -105,14 +101,19 @@ class Container extends Component {
 	}
 
 	render() {
-		const { connectDropTarget } = this.props
-		const { boxes } = this.state
+		const { connectDropTarget } = this.props;
+		const { boxes } = this.state;
 
-		return connectDropTarget(
-			<div style={styles}>
-				{Object.keys(boxes).map(key => this.renderBox(boxes[key], key))}
-			</div>,
-		)
+		if (this.state.alreadyUpdated == true) {
+			return connectDropTarget(
+				<div style={styles}>
+					{Object.keys(boxes).map(key => this.renderBox(boxes[key], key))}
+				</div>,
+			)
+		}
+		else {
+			return <div>Loading</div>
+		}
 	}
 }
 

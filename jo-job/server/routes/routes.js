@@ -2,6 +2,7 @@ var express = require('express');
 var fs = require('fs');
 var request = require('request');
 var cheerio = require('cheerio');
+var puppeteer = require('puppeteer');
 
 var router = express.Router();
 var bodyParser = require('body-parser');
@@ -73,43 +74,110 @@ router.get('/sparefoot', function(req, res){
   });
 })
 
-router.get('/uhaul', function(req, res){
+router.get('/uhaul', async function(req, res){
 
-  // var url = req.body.url;
+  const browser = await puppeteer.launch();
+  const page = await browser.newPage();
 
-  var url = 'https://www.uhaul.com/ReservationsMVC/RatesTrucks/';
+  await page.goto('https://www.uhaul.com/', {waitUntil: 'networkidle2'});
 
+  // dom element selectors
+  const PICKUPLOCATION_SELECTOR = '#PickupLocation-TruckOnly';
+  // const DROPOFFLOCATION_SELECTOR = '#DropoffLocation-TruckOnly';
+  const PICKUPDATE_SELECTOR = '#PickupDate-TruckOnly';
+  const PICKUPTIME_SELECTOR = '#PickupTime-TruckOnly';
+  const BUTTON_SELECTOR = 'button.button-confirm';
 
-  request(url, function(error, response, html){
-    var elem;
+  await page.click(PICKUPLOCATION_SELECTOR);
+  await page.keyboard.type('Durham, NC');
 
-    if(!error){
-      var $ = cheerio.load(html);
-      var json = { results : []};
+  // await page.click(PICKUPDATE_SELECTOR);
+  await page.evaluate((sel) => {
+        return document.querySelector(sel).value = '6/15/2018';
+      }, PICKUPDATE_SELECTOR);
 
-      elem = $('h3').first().html();
-      console.log($.html())
+  await page.click(PICKUPTIME_SELECTOR);
+  await page.select(PICKUPTIME_SELECTOR, '7');
 
-      $('#equipmentList > li').each(function(item, idx){
+  await page.click(BUTTON_SELECTOR);
 
-        var obj = {};
-        var data = $(this);
-        // console.log(data.html());
+  // await page.waitForNavigation();
 
-        // get name, address and distance div
-        truckType = data.find('h3').text();
-        obj['truckType'] = truckType;
+  await page.waitFor(6*1000);
 
-        json.results.push(obj);
-      })
+  const LIST_TRUCKTYPE_SELECTOR = '#equipmentList > li.divider';
+  let listLength = await page.evaluate((sel) => {
+    return document.querySelectorAll(sel).length;
+  }, LIST_TRUCKTYPE_SELECTOR);
 
-      res.send({result: elem});
-    }
-    else {
-      console.log('error' + error)
-    }
+  const TRUCKTYPE_SELECTOR = '#equipmentList > li:nth-child(INDEX) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h3';
+  const SUITABLEFOR_SELECTOR = '#equipmentList > li:nth-child(INDEX) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > h4';
+  const PRICE_SELECTOR = '#equipmentList > li:nth-child(INDEX) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > form:nth-child(1) > div:nth-child(1) > div.text-right > dl > dd > div:nth-child(1)';
+  const MILECHARGE_SELECTOR = '#equipmentList > li:nth-child(INDEX) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > form:nth-child(1) > div:nth-child(1) > div.text-right > dl > dd > div:nth-child(2)';
 
-  });
+  var json = {
+    results: []
+  };
+
+  for (let i = 1; i <= (listLength + 1); i++) {
+
+    var result = {};
+
+    // change the index to the next child
+    let truckTypeSelector = TRUCKTYPE_SELECTOR.replace("INDEX", i);
+    let suitableForSelector = SUITABLEFOR_SELECTOR.replace("INDEX", i);
+    let priceSelector = PRICE_SELECTOR.replace("INDEX", i);
+    let mileChargeSelector = MILECHARGE_SELECTOR.replace("INDEX", i);
+
+    let truckType = await page.evaluate((sel) => {
+          if (document.querySelector(sel) != null) {
+            return document.querySelector(sel).innerText;
+          }
+          else {
+            return 'None'
+          }
+        }, truckTypeSelector);
+
+    let suitableFor = await page.evaluate((sel) => {
+              if (document.querySelector(sel) != null) {
+                return document.querySelector(sel).innerText;
+              }
+              else {
+                return 'None'
+              }
+            }, suitableForSelector);
+
+    let price = await page.evaluate((sel) => {
+              if (document.querySelector(sel) != null) {
+                return document.querySelector(sel).innerText;
+              }
+              else {
+                return 'None'
+              }
+            }, priceSelector);
+
+    let mileCharge = await page.evaluate((sel) => {
+              if (document.querySelector(sel) != null) {
+                return document.querySelector(sel).innerText;
+              }
+              else {
+                return 'None'
+              }
+            }, mileChargeSelector);
+
+    result['truckType'] = truckType;
+    result['suitableFor'] = suitableFor;
+    result['price'] = price;
+    result['mileCharge'] = mileCharge;
+
+    json['results'].push(result);
+
+  }
+
+  await browser.close();
+
+  res.send(json);
+
 })
 
 router.route('/insert')
@@ -155,6 +223,7 @@ router.route('/insert')
 // add a new total cost
 router.route('/addCost')
 .post(function(req,res) {
+
   // first remove all previous costs
   TotalCost.remove({}, function(err, cost) {
     if (err)
@@ -162,15 +231,16 @@ router.route('/addCost')
 
     // then replace with new cost
     var totalCost = new TotalCost();
+
     totalCost.total = req.body.total;
     totalCost.storage = req.body.storage;
-    totalCost.truck = 0;
+    totalCost.truck = req.body.truck;
 
     // update distributed contributions
     Log.count({}, function (err, count) {
 
       var numPeople = count;
-      var contribution = parseFloat(req.body.total) / numPeople;
+      var contribution = parseFloat(totalCost.total) / numPeople;
 
       // Log.updateMany({}, {$set: {contribution: req.body.total / numPeople}})
       Log.updateMany({}, {
@@ -184,14 +254,15 @@ router.route('/addCost')
         console.log(result);
         console.log(err);
 
-        totalCost.save(function(err) {
-          if (err)
-          res.send(err);
+        totalCost.save(function(e) {
+          if (e)
+          res.send(e);
           res.send('Total Cost successfully added!');
         });
       })
     });
   });
+
 })
 
 // get the total cost

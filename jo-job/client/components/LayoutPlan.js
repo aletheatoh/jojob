@@ -10,7 +10,7 @@ import Table, { TableBody, TableCell, TableHead, TableRow, TableFooter } from 'm
 
 import List, { ListItem, ListItemIcon, ListItemSecondaryAction, ListItemText} from 'material-ui/List';
 
-import StorageDnD from './StorageDnD';
+import DragAroundCustomDragLayer from './DragAroundCustomDragLayer';
 
 const styles = theme => ({
   list: {
@@ -30,13 +30,11 @@ class LayoutPlan extends React.Component  {
   componentDidMount() {
     this.getData(this);
     this.getCost(this);
-    console.log('received props')
   }
 
   componentWillReceiveProps(nextProps) {
     this.getData(this);
     this.getCost(this);
-    console.log('receiving props again')
   }
 
   getData(ev){
@@ -57,6 +55,8 @@ class LayoutPlan extends React.Component  {
   render() {
 
     const { classes } = this.props;
+
+    // assign corresponding dimensions of container according to storage unit size
 
     const ListContainer = this.state.data ? (
       this.state.data.map((log, index) => {
@@ -85,7 +85,7 @@ class LayoutPlan extends React.Component  {
 
     return (
       <div>
-      <div style={{textAlign: 'center', width: 280}}>
+      <div style={{textAlign: 'center', width: 280, display: 'inline-block', verticalAlign: 'top'}}>
       <List>
       <ListItem>
       <ListItemText
@@ -96,7 +96,8 @@ class LayoutPlan extends React.Component  {
       {ListContainer}
       </List>
       </div>
-      <StorageDnD logs={this.state.data}/>
+      <DragAroundCustomDragLayer title={'Storage Unit'} logs={this.state.data}/>
+      <DragAroundCustomDragLayer title={'Rental Truck'} logs={this.state.data}/>
       </div>
     );
   }
