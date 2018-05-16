@@ -12,9 +12,10 @@ import Typography from 'material-ui/Typography';
 import PropTypes from 'prop-types';
 import AppBar from 'material-ui/AppBar';
 
-
 import LogTab from './LogTab';
 import StorageUnitTab from './StorageUnitTab';
+
+import LayoutPlan from './LayoutPlan';
 
 const HomePageWrapper = styled.main`
   font-family: 'Alegreya Sans SC', sans-serif;
@@ -33,9 +34,6 @@ TabContainer.propTypes = {
 };
 
 const styles = theme => ({
-  // tabsRoot: {
-  //   backgroundColor: 'rgba(255, 251, 151, 0.79)',
-  // },
   tabsIndicator: {
     backgroundColor: 'red',
   },
@@ -81,11 +79,13 @@ class App extends React.Component {
       <Tab value='one' label="Bookkeeping" classes={{ root: classes.tabRoot, selected: classes.tabSelected }}/>
       <Tab value='two' label="Storage Unit" classes={{ root: classes.tabRoot, selected: classes.tabSelected }}/>
       <Tab value='three' label="Rental Truck" classes={{ root: classes.tabRoot, selected: classes.tabSelected }}/>
+      <Tab value='four' label="Layout Planning" classes={{ root: classes.tabRoot, selected: classes.tabSelected }}/>
       </Tabs>
       </AppBar>
       {value === 'one' && <TabContainer><LogTab/></TabContainer>}
       {value === 'two' && <TabContainer><StorageUnitTab/></TabContainer>}
       {value === 'three' && <TabContainer>Rental Truck</TabContainer>}
+      {value === 'four' && <TabContainer><LayoutPlan/></TabContainer>}
       </div>
       </HomePageWrapper>
     );

@@ -49,6 +49,7 @@ class LogTab extends React.Component  {
     this.getCost(this);
   }
 
+  // unsafe so should change
   componentWillReceiveProps(nextProps) {
     this.getData(this);
     this.getCost(this);
@@ -78,7 +79,7 @@ class LogTab extends React.Component  {
       <div style={{textAlign: 'center'}}>
       <Add/>
       <CSVLink data={this.state.data} headers={headers}>
-          Download me
+      Download me
       </CSVLink>
       </div>
       <div style={{textAlign: 'center'}} class="logtab-container">
@@ -114,16 +115,16 @@ class LogTab extends React.Component  {
       }
       </TableBody>
       <TableFooter>
-       {
-         this.state.cost.map(function(item){
-           return <TableRow>
-           <TableCell style={{fontSize: 16, color: 'black', padding: 0, paddingRight: 10}} colSpan={1}>Storage: ${item.storage}</TableCell>
-           <TableCell style={{fontSize: 16, color: 'black', padding: 0}} colSpan={2}>Transport: ${item.truck}</TableCell>
-           <TableCell style={{textAlign: 'right', fontSize: 20, fontWeight: 'bold', color: 'black'}} colSpan={5}>Total Cost: ${item.total}</TableCell>
-           </TableRow>
-         })
-       }
-     </TableFooter>
+      {
+        this.state.cost.map(function(item){
+          return <TableRow>
+          <TableCell style={{fontSize: 16, color: 'black', padding: 0, paddingRight: 10}} colSpan={1}>Storage: ${item.storage}</TableCell>
+          <TableCell style={{fontSize: 16, color: 'black', padding: 0}} colSpan={2}>Transport: ${item.truck}</TableCell>
+          <TableCell style={{textAlign: 'right', fontSize: 20, fontWeight: 'bold', color: 'black'}} colSpan={5}>Total Cost: ${item.total}</TableCell>
+          </TableRow>
+        })
+      }
+      </TableFooter>
       </Table>
       </div>
       </div>

@@ -240,7 +240,6 @@ class StorageUnitTab extends React.Component  {
       <Button color="primary" onClick={this.handleClick} >Search</Button>
       </SearchBox>
       {renderData}
-
     </div>
     );
   }
