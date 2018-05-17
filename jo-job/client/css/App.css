@@ -28,7 +28,7 @@
 }
 
 html {
-  /* font-size: 18px; */
+  background-color: #EFEBE9;
 }
 
 body {
@@ -37,12 +37,16 @@ body {
 
 header {
   margin: 0;
-  padding: 20px;
+  padding: 18px;
 }
 
-div.jss71.jss80 {
-  background-color: white;
+span.jss62 {
+  font-size: 15px !important;
 }
+
+/* div.jss71.jss80 {
+  background-color: #EFEBE9 !important;
+} */
 
 #list-heading > div > h3 {
   font-weight: bold;

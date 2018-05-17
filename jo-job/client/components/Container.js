@@ -124,7 +124,8 @@ class Container extends Component {
 				<div style={{
 					justifyContent: 'center',
 					alignItems: 'center',
-					zIndex: 10
+					zIndex: 10,
+					marginLeft: 10
 				}}>
 				<CircularProgress style={{ width: '5vw', height: '5vw', textAlign: 'center' }} />
 				</div>

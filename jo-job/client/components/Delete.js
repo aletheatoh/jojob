@@ -81,7 +81,7 @@ class Delete extends React.Component {
           <div style={{
             position: 'absolute',
             top: '50%',
-            left: '47%',
+            left: '50%',
             marginTop: '-50px',
             marginLeft: '-50px',
             justifyContent: 'center',
@@ -95,7 +95,7 @@ class Delete extends React.Component {
       else {
         return (
           <IconButton color="primary" onClick={this.onClick} aria-label="delete" style={{marginLeft: 5}}>
-          <DeleteIcon size="small" />
+            <img src="../img/rubbish.svg" style={{width: 32}}/>
           </IconButton>
         )
       }

@@ -181,11 +181,7 @@ class RentalTruckTab extends React.Component  {
           </CardContent>
           </div>
           <div style={{display: 'inline-block'}}>
-          <CardMedia
-            image={img}
-            title="Live from space album cover"
-            style={{width: 80}}
-          />
+          <img src={img} style={{width: 150}}/>
           </div>
           <CardActions style={{textAlign: 'right'}}>
           <Button onClick={() => this.addToLog(result.price)} size="small" color="primary">
@@ -210,7 +206,7 @@ class RentalTruckTab extends React.Component  {
         <div style={{
           position: 'absolute',
           top: '50%',
-          left: '47%',
+          left: '50%',
           marginTop: '-50px',
           marginLeft: '-50px',
           justifyContent: 'center',

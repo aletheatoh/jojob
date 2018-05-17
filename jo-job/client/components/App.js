@@ -11,11 +11,16 @@ import { withStyles } from 'material-ui/styles';
 import Typography from 'material-ui/Typography';
 import PropTypes from 'prop-types';
 import AppBar from 'material-ui/AppBar';
+import Toolbar from 'material-ui/Toolbar';
 
 import LogTab from './LogTab';
 import StorageUnitTab from './StorageUnitTab';
 import RentalTruckTab from './RentalTruckTab';
 import LayoutPlan from './LayoutPlan';
+
+import List, { ListItem, ListItemIcon, ListItemSecondaryAction, ListItemText} from 'material-ui/List';
+
+import Table, { TableBody, TableCell, TableHead, TableRow, TableFooter } from 'material-ui/Table';
 
 const HomePageWrapper = styled.main`
   font-family: 'Alegreya Sans SC', sans-serif;
@@ -34,10 +39,19 @@ TabContainer.propTypes = {
 };
 
 const styles = theme => ({
+  root: {
+   flexGrow: 1,
+   height: 430,
+   zIndex: 1,
+   overflow: 'hidden',
+   position: 'relative',
+   display: 'flex',
+ },
   tabsIndicator: {
     backgroundColor: 'red',
   },
   tabRoot: {
+    display: 'block',
     marginRight: theme.spacing.unit * 3,
     '&:hover': {
       color: '#FF6D00',
@@ -52,7 +66,17 @@ const styles = theme => ({
     color: '#212121',
     opacity: 1
   },
+  appBar: {
+    zIndex: theme.zIndex.drawer + 1,
+  },
   tabSelected: {},
+  content: {
+    flexGrow: 1,
+    backgroundColor: theme.palette.background.default,
+    padding: theme.spacing.unit * 3,
+    minWidth: 0, // So the Typography noWrap works
+  },
+  toolbar: theme.mixins.toolbar,
 });
 
 class App extends React.Component {
@@ -74,7 +98,7 @@ class App extends React.Component {
     return (
       <HomePageWrapper>
       <div>
-      <AppBar position="static" style={{backgroundColor: 'rgba(255, 251, 151, 0.70)'}}>
+      <AppBar position="static" style={{backgroundColor: '#795548'}}>
       <Tabs style={{fontSize: 18}} centered value={value} onChange={this.handleChange} classes={{ indicator: classes.tabsIndicator }}>
       <Tab value='one' label="Bookkeeping" classes={{ root: classes.tabRoot, selected: classes.tabSelected }}/>
       <Tab value='two' label="Storage Unit" classes={{ root: classes.tabRoot, selected: classes.tabSelected }}/>

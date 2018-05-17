@@ -155,7 +155,7 @@ class Update extends React.Component {
           <div style={{
             position: 'absolute',
             top: '50%',
-            left: '47%',
+            left: '50%',
             marginTop: '-50px',
             marginLeft: '-50px',
             justifyContent: 'center',
@@ -170,7 +170,7 @@ class Update extends React.Component {
         return (
           <div>
           <IconButton color="secondary" onClick={this.openModal} aria-label="edit" style={{marginLeft: 5}}>
-          <EditIcon size="small" />
+            <img src="../img/edit.svg" style={{width: 28}}/>
           </IconButton>
           <Dialog
           className={classes.root}

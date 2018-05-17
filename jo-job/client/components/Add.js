@@ -138,7 +138,7 @@ class Add extends React.Component {
           <div style={{
             position: 'absolute',
             top: '50%',
-            left: '47%',
+            left: '50%',
             marginTop: '-50px',
             marginLeft: '-50px',
             justifyContent: 'center',

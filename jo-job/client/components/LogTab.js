@@ -124,8 +124,22 @@ class LogTab extends React.Component  {
       {
         this.state.cost.map(function(item){
           return <TableRow>
-          <TableCell style={{fontSize: 16, color: 'black', padding: 0, paddingRight: 10}} colSpan={1}>Storage: ${item.storage}</TableCell>
-          <TableCell style={{fontSize: 16, color: 'black', padding: 0}} colSpan={2}>Transport: ${item.truck}</TableCell>
+          <TableCell style={{fontSize: 16, color: 'black', padding: 0, paddingRight: 10}} colSpan={1}>
+            <div style={{display: 'inline-block'}}>
+              <img src="../img/storage-unit.svg" style={{width: 38}}/>
+            </div>
+            <div style={{display: 'inline-block', verticalAlign: 'top', paddingLeft: 5, paddingTop: 15}}>
+              <div style={{verticalAlign: 'middle'}}>${item.storage}</div>
+            </div>
+          </TableCell>
+          <TableCell style={{fontSize: 16, color: 'black', padding: 0, paddingLeft: 10, paddingTop: 3}} colSpan={2}>
+          <div style={{display: 'inline-block'}}>
+            <img src="../img/delivery-truck.svg" style={{width: 48}}/>
+          </div>
+          <div style={{display: 'inline-block', verticalAlign: 'top', paddingLeft: 5, paddingTop: 15}}>
+            <div>${item.truck}</div>
+          </div>
+          </TableCell>
           <TableCell style={{textAlign: 'right', fontSize: 20, fontWeight: 'bold', color: 'black'}} colSpan={5}>Total Cost: ${item.total}</TableCell>
           </TableRow>
         })
