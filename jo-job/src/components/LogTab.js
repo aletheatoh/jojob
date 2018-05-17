@@ -14,6 +14,8 @@ import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
 
 import {CSVLink} from 'react-csv';
 
+import {unitSizeDic} from './Helpers'
+
 import { withStyles } from 'material-ui/styles';
 import Table, { TableBody, TableCell, TableHead, TableRow, TableFooter } from 'material-ui/Table';
 
@@ -86,9 +88,9 @@ class LogTab extends React.Component  {
 
     return (
       <div style={{textAlign: 'center'}}>
-      <div style={{textAlign: 'center'}}>
+      <div style={{width: 1000, margin: '0 auto'}}>
       <Add/>
-      <div style={{display: 'inline-block', paddingLeft: 10}}>
+      <div style={{display: 'inline-block', paddingLeft: 10, paddingRight: 5}}>
       <CSVLink data={this.state.data} headers={headers}>
       <MuiThemeProvider theme={theme}>
       <Button variant="fab" color="primary" aria-label="excel" >
@@ -115,6 +117,7 @@ class LogTab extends React.Component  {
       <TableBody>
       {
         this.state.data.map(function(log){
+
           return  <TableRow>
           <TableCell style={{textAlign: 'center'}} component="th" scope="row" className='counterCell' numeric></TableCell>
           <TableCell style={{textAlign: 'center'}} className='desc-col'>
@@ -133,13 +136,16 @@ class LogTab extends React.Component  {
       <TableFooter>
       {
         this.state.cost.map(function(item){
+
+          const unitSize = unitSizeDic(item.unitSize);
+
           return <TableRow>
           <TableCell style={{fontSize: 16, color: 'black', padding: 0, paddingRight: 10}} colSpan={1}>
             <div style={{display: 'inline-block'}}>
               <img src="../img/storage-unit.svg" style={{width: 38}}/>
             </div>
             <div style={{display: 'inline-block', verticalAlign: 'top', paddingLeft: 5, paddingTop: 15}}>
-              <div style={{verticalAlign: 'middle'}}>${item.storage}</div>
+              <div style={{verticalAlign: 'middle'}}><b>{unitSize}</b></div>
             </div>
           </TableCell>
           <TableCell style={{fontSize: 16, color: 'black', padding: 0, paddingLeft: 10, paddingTop: 3}} colSpan={2}>
@@ -147,10 +153,10 @@ class LogTab extends React.Component  {
             <img src="../img/delivery-truck.svg" style={{width: 48}}/>
           </div>
           <div style={{display: 'inline-block', verticalAlign: 'top', paddingLeft: 5, paddingTop: 15}}>
-            <div>${item.truck}</div>
+            <div><b>{item.truckType}</b></div>
           </div>
           </TableCell>
-          <TableCell style={{textAlign: 'right', fontSize: 20, fontWeight: 'bold', color: 'black'}} colSpan={5}>Total Cost: ${item.total}</TableCell>
+          <TableCell style={{textAlign: 'right', fontSize: 20, color: 'black'}} colSpan={5}><b>Total Cost:</b> <span style={{fontWeight: 100}}>${item.storage} + ${item.truck} = </span>${item.total}</TableCell>
           </TableRow>
         })
       }

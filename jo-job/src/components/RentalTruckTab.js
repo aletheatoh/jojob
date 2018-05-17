@@ -228,7 +228,10 @@ class RentalTruckTab extends React.Component  {
         )
       })
     ) : (
-      <SearchResults>
+      <SearchResults style={{textAlign: 'center'}}>
+      <div style={{margin: '0 auto'}}>
+        <img src="../img/delivery-truck.svg" style={{width: 350}}/>
+      </div>
       </SearchResults>
     );
 

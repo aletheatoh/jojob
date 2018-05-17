@@ -2,20 +2,22 @@ var express = require('express');
 var router = require('./routes/routes.js')
 var path = require('path');
 var bodyParser = require('body-parser');
+require('dotenv').load();
 
 var app = express();
 
 var mongoose = require('mongoose');
+//
+// app.set('view engine', 'html');
+// app.set('views', path.join(__dirname, '../public'));
 
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, '../client'));
-app.use(express.static(path.join(__dirname, '../client')));
+app.use(express.static(path.join(__dirname, '../public')));
+app.use(express.static(path.join(__dirname, '../src')));
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: false}));
 
-mongoose.connect('mongodb://aletheatoh:cheerful@ds119800.mlab.com:19800/project_4');
+mongoose.connect(`mongodb://${process.env.REACT_APP_DB_USERNAME}:${process.env.REACT_APP_DB_PASSWORD}@ds119800.mlab.com:19800/project_4`);
 
 app.use('/', router);
-app.use('/scrape', router)
 
 module.exports=app;

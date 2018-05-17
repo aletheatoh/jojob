@@ -44,6 +44,10 @@ span.jss62 {
   font-size: 15px !important;
 }
 
+#form-dialog-title > h2 {
+  padding-left: 8px !important;
+}
+
 /* div.jss71.jss80 {
   background-color: #EFEBE9 !important;
 } */

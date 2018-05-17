@@ -171,7 +171,7 @@ class Add extends React.Component {
           onClose={this.closeModal}
           aria-labelledby="form-dialog-title"
           >
-          <DialogTitle id="form-dialog-title">Add Person</DialogTitle>
+          <DialogTitle id="form-dialog-title">{"Add Person"}</DialogTitle>
           <DialogContent>
           <FormControl className={classes.margin}>
           <InputLabel style={{textAlign: 'left'}} htmlFor="name">Name</InputLabel>

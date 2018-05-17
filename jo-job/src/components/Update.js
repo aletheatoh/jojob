@@ -178,7 +178,7 @@ class Update extends React.Component {
           onClose={this.closeModal}
           aria-labelledby="form-dialog-title"
           >
-          <DialogTitle id="form-dialog-title">Update Entry</DialogTitle>
+          <DialogTitle id="form-dialog-title">{"Update Entry"}</DialogTitle>
           <DialogContent>
           <FormControl className={classes.margin}>
           <InputLabel style={{textAlign: 'left'}} htmlFor="name">Name</InputLabel>

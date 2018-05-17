@@ -27,7 +27,7 @@ import Dialog, {
 
 import { CircularProgress } from 'material-ui/Progress';
 
-import { comparePrice, compareReviews } from './helpers'
+import { comparePrice, compareReviews } from './Helpers'
 
 const SearchBox = styled.div`
 text-align: center;
@@ -190,7 +190,7 @@ class StorageUnitTab extends React.Component  {
 
     const { classes } = this.props;
 
-    const renderData = this.state.data ? (
+    const renderData = (this.state.data != '') ? (
       this.state.data.map((result, index) => {
 
         const promotion = result.promotion ? result.promotion : 'No promotion';
@@ -253,7 +253,10 @@ class StorageUnitTab extends React.Component  {
         )
       })
     ) : (
-      <SearchResults>
+      <SearchResults style={{textAlign: 'center'}}>
+      <div style={{margin: '0 auto'}}>
+        <img src="../img/storage-unit.svg" style={{width: 320, paddingTop: 10}}/>
+      </div>
       </SearchResults>
     );
 
