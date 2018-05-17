@@ -10,6 +10,8 @@ import Button from 'material-ui/Button';
 import IconButton from 'material-ui/IconButton';
 import DownloadIcon from 'material-ui-icons/Save';
 
+import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
+
 import {CSVLink} from 'react-csv';
 
 import { withStyles } from 'material-ui/styles';
@@ -34,6 +36,12 @@ const styles = theme => ({
     textAlign: 'center',
     color: 'black',
     margin: '0 auto'
+  },
+});
+
+const theme = createMuiTheme({
+  palette: {
+    primary: {main: '#C5E1A5'},
   },
 });
 
@@ -82,9 +90,11 @@ class LogTab extends React.Component  {
       <Add/>
       <div style={{display: 'inline-block', paddingLeft: 10}}>
       <CSVLink data={this.state.data} headers={headers}>
-      <Button variant="fab" color="secondary" aria-label="download" >
-      <DownloadIcon size="large" />
+      <MuiThemeProvider theme={theme}>
+      <Button variant="fab" color="primary" aria-label="excel" >
+        <img src="../img/excel.svg" style={{width: 35}}/>
       </Button>
+      </MuiThemeProvider>
       </CSVLink>
       </div>
       </div>

@@ -13,6 +13,8 @@ import EditIcon from 'material-ui-icons/Edit';
 import IconButton from 'material-ui/IconButton';
 import TextField from 'material-ui/TextField';
 
+import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
+
 import { CircularProgress } from 'material-ui/Progress';
 
 import Dialog, {
@@ -25,6 +27,12 @@ import Dialog, {
 import Input, { InputLabel, InputAdornment } from 'material-ui/Input';
 
 import { FormControl } from 'material-ui/Form';
+
+const theme = createMuiTheme({
+  palette: {
+    primary: {main: '#9C27B0'},
+  },
+});
 
 const styles = theme => ({
   root: {
@@ -152,9 +160,11 @@ class Add extends React.Component {
       else {
         return (
           <div style={{display: 'inline-block'}}>
+          <MuiThemeProvider theme={theme}>
           <Button variant="fab" color="primary" onClick={this.openModal} aria-label="add" >
-          <AddIcon size="large" />
+            <img src="../img/add-user.svg" style={{width: 33}}/>
           </Button>
+          </MuiThemeProvider>
           <Dialog
           className={classes.root}
           open={this.state.modalIsOpen}

@@ -25,6 +25,13 @@ import { comparePrice, compareReviews } from './helpers'
 
 import TextField from 'material-ui/TextField';
 
+import Dialog, {
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from 'material-ui/Dialog';
+
 const SearchBox = styled.div`
 text-align: center;
 width: 600px;
@@ -79,12 +86,16 @@ class RentalTruckTab extends React.Component  {
       oldTotal: '',
       oldStorage: '',
       oldTruck: '',
+      oldUnitSize: '',
+      oldTruckType: '',
+      modalIsOpen: false,
       handlingRequest: false
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.addToLog = this.addToLog.bind(this);
     this.getCost = this.getCost.bind(this);
+    this.closeModal = this.closeModal.bind(this);
   }
 
   componentDidMount() {
@@ -100,33 +111,52 @@ class RentalTruckTab extends React.Component  {
   getCost(ev){
     axios.get('/getCost')
     .then(function(response) {
-      console.log(response.data)
       ev.setState({
         oldTotal: parseFloat(response.data[0].total),
         oldStorage: parseFloat(response.data[0].storage),
-        oldTruck: parseFloat(response.data[0].truck)
+        oldTruck: parseFloat(response.data[0].truck),
+        oldUnitSize: response.data[0].unitSize,
+        oldTruckType: response.data[0].truckType,
       });
     });
   }
 
   handleChange(event) {
-    this.setState({ [event.target.name]: event.target.value });
+    this.setState({
+      pickUp: event.target.value
+    });
+    console.log(event.target.name);
+    console.log(event.target.value);
   }
 
-  addToLog(price) {
+  closeModal(e) {
+    this.setState({
+      modalIsOpen: false
+    });
+  }
+
+  addToLog(price, truckType) {
+    this.setState({
+      handlingRequest: true
+    });
     const priceFloat = parseFloat(price.replace('$',''));
     axios.post('/addCost',
     querystring.stringify({
       storage: this.state.oldStorage,
       truck: priceFloat,
-      total: (priceFloat + this.state.oldStorage)
+      total: (priceFloat + this.state.oldStorage),
+      truckType: truckType,
+      unitSize: this.state.oldUnitSize
     }), {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded"
       }
-    }).then(function(response) {
-      console.log('success')
-    });
+    }).then(response => {  // <== Change is here
+      this.setState({
+        handlingRequest: false,
+        modalIsOpen: true
+      })
+    })
   }
 
   handleClick(event) {
@@ -134,7 +164,7 @@ class RentalTruckTab extends React.Component  {
       handlingRequest: true
     });
     var pickUp = this.state.pickUp;
-
+    console.log(pickUp);
     var endpoint = `http://localhost:8000/uhaul?pickup=${pickUp}`;
 
     axios.get(endpoint)
@@ -159,13 +189,13 @@ class RentalTruckTab extends React.Component  {
 
         return (
           <SearchResults>
-          <Card style={{margin: '0 auto'}} className={classes.card}>
+          <Card style={{margin: '0 auto', position: 'relative'}} className={classes.card}>
           <div style={{display: 'inline-block'}}>
           <CardContent>
           <Typography gutterBottom variant="headline" component="h2">
           {result.truckType}
           </Typography>
-          <div style={{position: 'relative'}}>
+          <div>
           <div style={{display: 'inline-block'}}>
           <Typography gutterBottom variant="subheading" color="textSecondary">
           {result.suitableFor}
@@ -181,10 +211,12 @@ class RentalTruckTab extends React.Component  {
           </CardContent>
           </div>
           <div style={{display: 'inline-block'}}>
+          <div style={{position: 'absolute', right: 50, bottom: 50}}>
           <img src={img} style={{width: 150}}/>
           </div>
+          </div>
           <CardActions style={{textAlign: 'right'}}>
-          <Button onClick={() => this.addToLog(result.price)} size="small" color="primary">
+          <Button onClick={() => this.addToLog(result.price, result.truckType)} size="small" color="primary">
           Add to Log
           </Button>
           <Button size="small" color="primary">
@@ -193,7 +225,6 @@ class RentalTruckTab extends React.Component  {
           </CardActions>
           </Card>
           </SearchResults>
-
         )
       })
     ) : (
@@ -219,33 +250,65 @@ class RentalTruckTab extends React.Component  {
     }
     else {
 
-      return (
-        <div>
-        <SearchBox>
-        <form className={classes.root} autoComplete="off" style={{margin: '0 auto'}}>
+      if (this.state.modalIsOpen === true){
+        return (
+          <div>
+          <Dialog
+          open={this.state.modalIsOpen}
+          onClose={this.closeModal}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+          >
+          <DialogTitle id="alert-dialog-title">{"Success!"}</DialogTitle>
+          <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+          Successfully added to log!
+          </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+          <Link to={{pathname: '/', search: '' }} style={{ textDecoration: 'none' }}>
+          <Button onClick={this.closeModal} color="primary">
+          Close
+          </Button>
+          </Link>
+          </DialogActions>
+          </Dialog>
+          </div>
+        )
+      }
 
-        <TextField
-        className={classNames(classes.margin, classes.textField)}
-        style={{textAlign: 'center', margin: '0 auto'}}
-        id="pickUp"
-        name="pickUp"
-        label="Pickup Date"
-        type="date"
-        value={this.state.pickUp}
-        defaultValue={this.state.pickUp}
-        onChange={this.handleTextChange}
-        InputLabelProps={{
-          shrink: true,
-          textAlign: 'left'
-        }}
-        />
+      else {
 
-        </form>
-        <Button color="primary" onClick={this.handleClick} >Search</Button>
-        </SearchBox>
-        {renderData}
-        </div>
-      )
+
+        return (
+          <div>
+          <SearchBox>
+          <form className={classes.root} autoComplete="off" style={{margin: '0 auto'}}>
+
+          <TextField
+          className={classNames(classes.margin, classes.textField)}
+          style={{textAlign: 'center', margin: '0 auto'}}
+          id="pickUp"
+          name="pickUp"
+          label="Pickup Date"
+          type="date"
+          defaultValue={this.state.pickUp}
+          onChange={this.handleTextChange}
+          formatDate={(date) => moment(date).format('MM-DD-YYYY')}
+          InputLabelProps={{
+            shrink: true,
+            textAlign: 'left'
+          }}
+          />
+
+          </form>
+          <Button color="primary" onClick={this.handleClick} >Search</Button>
+          </SearchBox>
+          {renderData}
+          </div>
+        )
+      }
+
     }
   }
 }

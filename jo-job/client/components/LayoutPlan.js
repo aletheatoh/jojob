@@ -88,8 +88,9 @@ class LayoutPlan extends React.Component  {
       <div style={{textAlign: 'center', width: 280, display: 'inline-block', verticalAlign: 'top'}}>
       <List>
       <ListItem id="list-heading">
+      <img src="../img/notepad.svg" style={{width: 30, paddingRight: 5}}/>
       <ListItemText
-      primary="No. of Boxes"
+      primary="Log"
       className={classes.list}
       style={{
         fontWeight: 500

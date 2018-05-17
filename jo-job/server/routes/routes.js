@@ -76,6 +76,9 @@ router.get('/sparefoot', function(req, res){
 
 router.get('/uhaul', async function(req, res){
 
+  // const pickUp = req.query.pickup;
+  // console.log('pickup is' + req.query.pickup);
+
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
 
@@ -93,7 +96,7 @@ router.get('/uhaul', async function(req, res){
 
   // await page.click(PICKUPDATE_SELECTOR);
   await page.evaluate((sel) => {
-        return document.querySelector(sel).value = '6/15/2018';
+        return document.querySelector(sel).value = '6/6/2018';
       }, PICKUPDATE_SELECTOR);
 
   await page.click(PICKUPTIME_SELECTOR);
@@ -225,9 +228,9 @@ router.route('/addCost')
 .post(function(req,res) {
 
   // first remove all previous costs
-  TotalCost.remove({}, function(err, cost) {
-    if (err)
-    res.send(err);
+  TotalCost.remove({}, function(error, cost) {
+    if (error)
+    res.send(error);
 
     // then replace with new cost
     var totalCost = new TotalCost();
@@ -235,9 +238,11 @@ router.route('/addCost')
     totalCost.total = req.body.total;
     totalCost.storage = req.body.storage;
     totalCost.truck = req.body.truck;
+    totalCost.unitSize = req.body.unitSize;
+    totalCost.truckType = req.body.truckType;
 
     // update distributed contributions
-    Log.count({}, function (err, count) {
+    Log.count({}, function (error2, count) {
 
       var numPeople = count;
       var contribution = parseFloat(totalCost.total) / numPeople;
@@ -250,9 +255,9 @@ router.route('/addCost')
       }, {
         multi: true
       },
-      function(err, result) {
-        console.log(result);
-        console.log(err);
+      function(error3, result) {
+        if (error3)
+        res.send(error3);
 
         totalCost.save(function(e) {
           if (e)

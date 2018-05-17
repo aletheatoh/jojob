@@ -18,6 +18,13 @@ import Button from 'material-ui/Button';
 import Typography from 'material-ui/Typography';
 import PhoneIcon from 'material-ui-icons/Phone';
 
+import Dialog, {
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from 'material-ui/Dialog';
+
 import { CircularProgress } from 'material-ui/Progress';
 
 import { comparePrice, compareReviews } from './helpers'
@@ -71,12 +78,16 @@ class StorageUnitTab extends React.Component  {
       oldTotal: '',
       oldStorage: '',
       oldTruck: '',
+      oldUnitSize: '',
+      oldTruckType: '',
+      modalIsOpen: false,
       handlingRequest: false
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.addToLog = this.addToLog.bind(this);
     this.getCost = this.getCost.bind(this);
+    this.closeModal = this.closeModal.bind(this);
   }
 
   componentDidMount() {
@@ -96,7 +107,9 @@ class StorageUnitTab extends React.Component  {
       ev.setState({
         oldTotal: parseFloat(response.data[0].total),
         oldStorage: parseFloat(response.data[0].storage),
-        oldTruck: parseFloat(response.data[0].truck)
+        oldTruck: parseFloat(response.data[0].truck),
+        oldUnitSize: response.data[0].unitSize,
+        oldTruckType: response.data[0].truckType,
       });
     });
   }
@@ -105,20 +118,34 @@ class StorageUnitTab extends React.Component  {
     this.setState({ [event.target.name]: event.target.value });
   }
 
-  addToLog(price) {
+  closeModal(e) {
+    this.setState({
+      modalIsOpen: false
+    });
+  }
+
+  addToLog(event, price) {
+    this.setState({
+      handlingRequest: true
+    });
     const priceFloat = parseFloat(price.replace('$',''));
     axios.post('/addCost',
     querystring.stringify({
       storage: priceFloat,
       truck: this.state.oldTruck,
-      total: (priceFloat + this.state.oldTruck)
+      total: (priceFloat + this.state.oldTruck),
+      unitSize: this.state.unitSize,
+      truckType: this.state.oldTruckType
     }), {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded"
       }
-    }).then(function(response) {
-      console.log('success')
-    });
+    }).then(response => {  // <== Change is here
+      this.setState({
+        handlingRequest: false,
+        modalIsOpen: true
+      })
+    })
   }
 
   handleClick(event) {
@@ -214,7 +241,7 @@ class StorageUnitTab extends React.Component  {
           </ResultDetail>
           </CardContent>
           <CardActions style={{textAlign: 'right'}}>
-          <Button onClick={() => this.addToLog(result.price)} style={{textAlign: 'right'}} size="small" color="primary">
+          <Button onClick={(event) => this.addToLog(event, result.price)} style={{textAlign: 'right'}} size="small" color="primary">
           Add to Log
           </Button>
           <Button style={{textAlign: 'right'}} size="small" color="primary" href={result.link} target="_blank">
@@ -223,7 +250,6 @@ class StorageUnitTab extends React.Component  {
           </CardActions>
           </Card>
           </SearchResults>
-
         )
       })
     ) : (
@@ -249,56 +275,90 @@ class StorageUnitTab extends React.Component  {
     }
     else {
 
-      return (
-        <div>
-        <SearchBox>
-        <form className={classes.root} autoComplete="off">
-        <FormControl className={classes.formControl} style={{margin: '0 auto'}}>
-        <InputLabel htmlFor="unitSize-simple" style={{textAlign: 'left', fontWeight: 100, fontSize: 15}}>Unit Size</InputLabel>
-        <Select
-        value={this.state.unitSize}
-        onChange={this.handleChange}
-        inputProps={{
-          name: 'unitSize',
-          id: 'unitSize-simple',
-        }}
-        >
-        <MenuItem style={{fontSize: 15}} value=''>
-        <em>None</em>
-        </MenuItem>
-        <MenuItem style={{fontSize: 15}} value={'20-37'}>5 x 5</MenuItem>
-        <MenuItem style={{fontSize: 15}} value={'37-62'}>5 x 10</MenuItem>
-        <MenuItem style={{fontSize: 15}} value={'87-125'}>10 x 10</MenuItem>
-        </Select>
-        </FormControl>
-        <FormControl className={classes.formControl} style={{margin: '0 auto', padding: 0}}>
-        <InputLabel htmlFor="order-simple" style={{textAlign: 'left', fontWeight: 100, fontSize: 15}}>Order By</InputLabel>
-        <Select
-        value={this.state.order}
-        onChange={this.handleChange}
-        inputProps={{
-          name: 'order',
-          id: 'order-simple',
-        }}
-        >
-        <MenuItem style={{fontSize: 15}} value=''>
-        <em>None</em>
-        </MenuItem>
-        <MenuItem style={{fontSize: 15}} value={'price'}>Price</MenuItem>
-        <MenuItem style={{fontSize: 15}} value={'recommended'}>Recommended</MenuItem>
-        <MenuItem style={{fontSize: 15}} value={'distance'}>Distance</MenuItem>
-        <MenuItem style={{fontSize: 15}} value={'reviews'}>Reviews</MenuItem>
-        </Select>
-        </FormControl>
-        </form>
-        <Button color="primary" onClick={this.handleClick} >Search</Button>
-        </SearchBox>
-        {renderData}
-        </div>
-      )
+      if (this.state.modalIsOpen === true){
+        return (
+          <div>
+          <Dialog
+          open={this.state.modalIsOpen}
+          onClose={this.closeModal}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+          >
+          <DialogTitle id="alert-dialog-title">{"Success!"}</DialogTitle>
+          <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+          Successfully added to log!
+          </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+          <Link to={{pathname: '/', search: '' }} style={{ textDecoration: 'none' }}>
+          <Button onClick={this.closeModal} color="primary">
+          Close
+          </Button>
+          </Link>
+          </DialogActions>
+          </Dialog>
+          </div>
+        )
+      }
+      else {
+
+        return (
+          <div>
+          <SearchBox>
+          <form className={classes.root} autoComplete="off">
+          <FormControl className={classes.formControl} style={{margin: '0 auto'}}>
+          <InputLabel htmlFor="unitSize-simple" style={{textAlign: 'left', fontWeight: 100, fontSize: 15}}>Unit Size</InputLabel>
+          <Select
+          value={this.state.unitSize}
+          onChange={this.handleChange}
+          inputProps={{
+            name: 'unitSize',
+            id: 'unitSize-simple',
+          }}
+          >
+          <MenuItem style={{fontSize: 15}} value=''>
+          <em>None</em>
+          </MenuItem>
+          <MenuItem style={{fontSize: 15}} value={'20-37'}>5 x 5</MenuItem>
+          <MenuItem style={{fontSize: 15}} value={'37-62'}>5 x 10</MenuItem>
+          <MenuItem style={{fontSize: 15}} value={'62-87'}>5 x 15</MenuItem>
+          <MenuItem style={{fontSize: 15}} value={'87-125'}>10 x 10</MenuItem>
+          <MenuItem style={{fontSize: 15}} value={'125-175'}>10 x 15</MenuItem>
+          <MenuItem style={{fontSize: 15}} value={'175-250'}>10 x 20</MenuItem>
+          <MenuItem style={{fontSize: 15}} value={'250-999'}>10 x 30</MenuItem>
+          </Select>
+          </FormControl>
+          <FormControl className={classes.formControl} style={{margin: '0 auto', padding: 0}}>
+          <InputLabel htmlFor="order-simple" style={{textAlign: 'left', fontWeight: 100, fontSize: 15}}>Order By</InputLabel>
+          <Select
+          value={this.state.order}
+          onChange={this.handleChange}
+          inputProps={{
+            name: 'order',
+            id: 'order-simple',
+          }}
+          >
+          <MenuItem style={{fontSize: 15}} value=''>
+          <em>None</em>
+          </MenuItem>
+          <MenuItem style={{fontSize: 15}} value={'price'}>Price</MenuItem>
+          <MenuItem style={{fontSize: 15}} value={'recommended'}>Recommended</MenuItem>
+          <MenuItem style={{fontSize: 15}} value={'distance'}>Distance</MenuItem>
+          <MenuItem style={{fontSize: 15}} value={'reviews'}>Reviews</MenuItem>
+          </Select>
+          </FormControl>
+          </form>
+          <Button color="primary" onClick={this.handleClick} >Search</Button>
+          </SearchBox>
+          {renderData}
+          </div>
+        )
+      }
     }
   }
 }
+
 
 StorageUnitTab.propTypes = {
   classes: PropTypes.object.isRequired,

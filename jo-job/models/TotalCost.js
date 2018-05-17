@@ -4,7 +4,9 @@ var Schema = mongoose.Schema;
 var totalCostSchema = new Schema({
   total: Number,
   storage: Number,
-  truck: Number
+  unitSize: String,
+  truck: Number,
+  truckType: String
 });
 
 module.exports = mongoose.model('TotalCost', totalCostSchema);
