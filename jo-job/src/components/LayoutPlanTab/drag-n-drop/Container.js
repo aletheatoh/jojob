@@ -12,8 +12,8 @@ import shallowEqual from 'shallowequal'
 import { CircularProgress } from 'material-ui/Progress';
 
 const styles = {
-	width: 370,
-	height: 370,
+	// width: 370,
+	// height: 370,
 	border: '1px solid black',
 	position: 'relative',
 	paddingTop: 10
@@ -110,11 +110,11 @@ class Container extends Component {
 	}
 
 	render() {
-		const { connectDropTarget } = this.props;
+		const { connectDropTarget, width, height } = this.props;
 
 		if (this.state.alreadyUpdated === true) {
 			return connectDropTarget(
-				<div style={styles}>
+				<div style={{border: '1px solid black', position: 'relative', paddingTop: 10, width: `${width}px`, height: `${height}px` }}>
 					{Object.keys(this.state.boxes).map(key => this.renderBox(this.state.boxes[key], key))}
 				</div>,
 			)

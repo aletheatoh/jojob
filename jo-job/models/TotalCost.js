@@ -5,6 +5,7 @@ var totalCostSchema = new Schema({
   total: Number,
   storage: Number,
   unitSize: String,
+  storageLink: String,
   truck: Number,
   truckType: String
 });

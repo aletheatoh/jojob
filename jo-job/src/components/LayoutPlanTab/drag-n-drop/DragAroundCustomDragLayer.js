@@ -32,7 +32,9 @@ class DragAroundCustomDragLayer extends Component {
 			 this.setState({alreadyUpdated: true});
 			 this.setState({
 				 logs: this.props.logs,
-				 title: this.props.title
+				 title: this.props.title,
+				 width: this.props.width,
+				 height: this.props.height
 			 });
 		 }
 	 }
@@ -44,7 +46,7 @@ class DragAroundCustomDragLayer extends Component {
 		return (
 			<div style={{display: 'inline-block', marginLeft: 50}}>
 				<h3>{this.state.title}</h3>
-				<Container snapToGrid={snapToGridAfterDrop} logs={this.state.logs}/>
+				<Container width={this.props.width} height={this.props.height} snapToGrid={snapToGridAfterDrop} logs={this.state.logs}/>
 				<CustomDragLayer snapToGrid={snapToGridWhileDragging} />
 				<p style={{textAlign: 'center', paddingTop: 2, marginBottom: 0}}><b>Entrance</b></p>
 				<p style={{textAlign: 'center'}}>

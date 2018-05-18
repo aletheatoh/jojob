@@ -240,6 +240,7 @@ router.route('/addCost')
     totalCost.truck = req.body.truck;
     totalCost.unitSize = req.body.unitSize;
     totalCost.truckType = req.body.truckType;
+    totalCost.storageLink = req.body.storageLink;
 
     // update distributed contributions
     Log.count({}, function (error2, count) {

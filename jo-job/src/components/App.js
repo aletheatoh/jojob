@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import axios from 'axios';
-import Add from './Add'
-import Update from './Update'
-import Delete from './Delete';
+import Add from './LogTab/Add'
+import Update from './LogTab/Update'
+import Delete from './LogTab/Delete';
 
 import styled from 'styled-components';
 import Tabs, { Tab } from 'material-ui/Tabs';
@@ -13,10 +13,10 @@ import PropTypes from 'prop-types';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
 
-import LogTab from './LogTab';
-import StorageUnitTab from './StorageUnitTab';
-import RentalTruckTab from './RentalTruckTab';
-import LayoutPlan from './LayoutPlan';
+import LogTab from './LogTab/LogTab';
+import StorageUnitTab from './StorageUnitTab/StorageUnitTab';
+import RentalTruckTab from './RentalTruckTab/RentalTruckTab';
+import LayoutPlanTab from './LayoutPlanTab/LayoutPlanTab';
 
 import List, { ListItem, ListItemIcon, ListItemSecondaryAction, ListItemText} from 'material-ui/List';
 
@@ -109,7 +109,7 @@ class App extends React.Component {
       {value === 'one' && <TabContainer><LogTab/></TabContainer>}
       {value === 'two' && <TabContainer><StorageUnitTab/></TabContainer>}
       {value === 'three' && <TabContainer><RentalTruckTab/></TabContainer>}
-      {value === 'four' && <TabContainer><LayoutPlan/></TabContainer>}
+      {value === 'four' && <TabContainer><LayoutPlanTab/></TabContainer>}
       </div>
       </HomePageWrapper>
     );

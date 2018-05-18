@@ -21,7 +21,7 @@ import PhoneIcon from 'material-ui-icons/Phone';
 
 import { CircularProgress } from 'material-ui/Progress';
 
-import { comparePrice, compareReviews } from './helpers'
+import { comparePrice, compareReviews } from '../Helpers'
 
 import TextField from 'material-ui/TextField';
 
@@ -87,6 +87,7 @@ class RentalTruckTab extends React.Component  {
       oldStorage: '',
       oldTruck: '',
       oldUnitSize: '',
+      oldStorageLink: '',
       oldTruckType: '',
       modalIsOpen: false,
       handlingRequest: false
@@ -117,6 +118,7 @@ class RentalTruckTab extends React.Component  {
         oldTruck: parseFloat(response.data[0].truck),
         oldUnitSize: response.data[0].unitSize,
         oldTruckType: response.data[0].truckType,
+        oldStorageLink: response.data[0].storageLink
       });
     });
   }
@@ -146,7 +148,8 @@ class RentalTruckTab extends React.Component  {
       truck: priceFloat,
       total: (priceFloat + this.state.oldStorage),
       truckType: truckType,
-      unitSize: this.state.oldUnitSize
+      unitSize: this.state.oldUnitSize,
+      storageLink: this.state.oldStorageLink
     }), {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded"

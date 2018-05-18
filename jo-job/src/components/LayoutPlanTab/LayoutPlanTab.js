@@ -10,7 +10,7 @@ import Table, { TableBody, TableCell, TableHead, TableRow, TableFooter } from 'm
 
 import List, { ListItem, ListItemIcon, ListItemSecondaryAction, ListItemText} from 'material-ui/List';
 
-import DragAroundCustomDragLayer from './DragAroundCustomDragLayer';
+import DragAroundCustomDragLayer from './drag-n-drop/DragAroundCustomDragLayer';
 
 const styles = theme => ({
   list: {
@@ -88,7 +88,7 @@ class LayoutPlan extends React.Component  {
       <div style={{textAlign: 'center', width: 280, display: 'inline-block', verticalAlign: 'top'}}>
       <List>
       <ListItem id="list-heading">
-      <img src="../img/notepad.svg" style={{width: 30, paddingRight: 5}}/>
+      <img src="../img/notepad.svg" style={{width: 35, paddingRight: 5}}/>
       <ListItemText
       primary="Log"
       className={classes.list}
@@ -100,8 +100,8 @@ class LayoutPlan extends React.Component  {
       {ListContainer}
       </List>
       </div>
-      <DragAroundCustomDragLayer title={'Storage Unit'} logs={this.state.data}/>
-      <DragAroundCustomDragLayer title={'Rental Truck'} logs={this.state.data}/>
+      <DragAroundCustomDragLayer width={370} height={370} title={'Storage Unit'} logs={this.state.data}/>
+      <DragAroundCustomDragLayer width={200} height={370} title={'Rental Truck'} logs={this.state.data}/>
       </div>
     );
   }

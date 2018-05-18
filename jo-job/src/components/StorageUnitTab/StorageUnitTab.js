@@ -27,7 +27,7 @@ import Dialog, {
 
 import { CircularProgress } from 'material-ui/Progress';
 
-import { comparePrice, compareReviews } from './Helpers'
+import { comparePrice, compareReviews } from '../Helpers'
 
 const SearchBox = styled.div`
 text-align: center;
@@ -124,18 +124,19 @@ class StorageUnitTab extends React.Component  {
     });
   }
 
-  addToLog(event, price) {
+  addToLog(event, price, link) {
     this.setState({
       handlingRequest: true
     });
     const priceFloat = parseFloat(price.replace('$',''));
     axios.post('/addCost',
     querystring.stringify({
-      storage: priceFloat,
+      storage: priceFloat * 3,
       truck: this.state.oldTruck,
-      total: (priceFloat + this.state.oldTruck),
+      total: (priceFloat * 3 + this.state.oldTruck),
       unitSize: this.state.unitSize,
-      truckType: this.state.oldTruckType
+      truckType: this.state.oldTruckType,
+      storageLink: link
     }), {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded"
@@ -224,7 +225,7 @@ class StorageUnitTab extends React.Component  {
           <ResultDetail>
           <h5 style={{fontWeight: 'bold', marginTop: 8, marginBottom: 6}}>Price</h5>
           <Typography component="p">
-          {result.price}
+          {result.price} per month
           </Typography>
           </ResultDetail>
           <ResultDetail>
@@ -241,7 +242,7 @@ class StorageUnitTab extends React.Component  {
           </ResultDetail>
           </CardContent>
           <CardActions style={{textAlign: 'right'}}>
-          <Button onClick={(event) => this.addToLog(event, result.price)} style={{textAlign: 'right'}} size="small" color="primary">
+          <Button onClick={(event) => this.addToLog(event, result.price, result.link)} style={{textAlign: 'right'}} size="small" color="primary">
           Add to Log
           </Button>
           <Button style={{textAlign: 'right'}} size="small" color="primary" href={result.link} target="_blank">
@@ -361,7 +362,6 @@ class StorageUnitTab extends React.Component  {
     }
   }
 }
-
 
 StorageUnitTab.propTypes = {
   classes: PropTypes.object.isRequired,

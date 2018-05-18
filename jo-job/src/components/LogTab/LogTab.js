@@ -14,7 +14,7 @@ import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
 
 import {CSVLink} from 'react-csv';
 
-import {unitSizeDic} from './Helpers'
+import {unitSizeDic} from '../Helpers'
 
 import { withStyles } from 'material-ui/styles';
 import Table, { TableBody, TableCell, TableHead, TableRow, TableFooter } from 'material-ui/Table';
@@ -51,7 +51,12 @@ class LogTab extends React.Component  {
 
   constructor() {
     super();
-    this.state = {data: [], cost: []};
+    this.state = {
+      data: [],
+      cost: [],
+      receivedData: false,
+      receivedCost: false
+    };
     this.getData = this.getData.bind(this);
     this.getCost = this.getCost.bind(this);
   }
@@ -65,26 +70,42 @@ class LogTab extends React.Component  {
   componentWillReceiveProps(nextProps) {
     this.getData(this);
     this.getCost(this);
-    console.log('receiving props again')
   }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+	 // If we have a snapshot value, we've just added new items.
+	 // Adjust scroll so these new items don't push the old ones out of view.
+	 // (snapshot here is the value returned from getSnapshotBeforeUpdate)
+	 if (snapshot !== null) {
+		 console.log(snapshot)
+	 }
+ }
 
   getData(ev){
     axios.get('/getAll')
     .then(function(response) {
       console.log(response.data)
-      ev.setState({data: response.data});
+      ev.setState({
+        data: response.data,
+        receivedData: true
+      });
     });
   }
 
   getCost(ev){
     axios.get('/getCost')
     .then(function(response) {
-      ev.setState({cost: response.data});
+      ev.setState({
+        cost: response.data,
+        receivedCost: true
+      });
     });
   }
 
   render() {
     const { classes, headers } = this.props;
+
+    if (this.state.receivedData == true && this.state.receivedCost == true) console.log('yes')
 
     return (
       <div style={{textAlign: 'center'}}>
@@ -115,6 +136,7 @@ class LogTab extends React.Component  {
       </TableRow>
       </TableHead>
       <TableBody>
+
       {
         this.state.data.map(function(log){
 
@@ -132,14 +154,16 @@ class LogTab extends React.Component  {
           </TableRow>
         })
       }
+
       </TableBody>
-      <TableFooter>
+
       {
         this.state.cost.map(function(item){
 
           const unitSize = unitSizeDic(item.unitSize);
 
-          return <TableRow>
+          return <TableFooter>
+          <TableRow>
           <TableCell style={{fontSize: 16, color: 'black', padding: 0, paddingRight: 10}} colSpan={1}>
             <div style={{display: 'inline-block'}}>
               <img src="../img/storage-unit.svg" style={{width: 38}}/>
@@ -156,11 +180,24 @@ class LogTab extends React.Component  {
             <div><b>{item.truckType}</b></div>
           </div>
           </TableCell>
-          <TableCell style={{textAlign: 'right', fontSize: 20, color: 'black'}} colSpan={5}><b>Total Cost:</b> <span style={{fontWeight: 100}}>${item.storage} + ${item.truck} = </span>${item.total}</TableCell>
+          <TableCell style={{textAlign: 'right', fontSize: 20, color: 'black'}} colSpan={5}>
+          <b>Total Cost:</b> <span style={{fontWeight: 100}}>${item.storage} + ${item.truck} = </span>${item.total}
+          </TableCell>
           </TableRow>
+
+          <TableRow>
+          <TableCell colSpan={8}>
+          <Button href={item.storageLink} target="_blank" color="primary" aria-label="link" >
+            Storage Details
+          </Button>
+          </TableCell>
+          </TableRow>
+          </TableFooter>
+
         })
       }
-      </TableFooter>
+
+
       </Table>
       </div>
       </div>
