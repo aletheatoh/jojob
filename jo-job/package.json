@@ -36,7 +36,8 @@
   },
   "scripts": {
     "webpack": "webpack",
-    "start": "npm run webpack && nodemon --exec babel-node -- bin/www",
+    "start": "node bin/www",
+    "heroku-postbuild": "cd client && npm install --only=dev && npm install && npm run build",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
@@ -44,5 +45,8 @@
   "devDependencies": {
     "webpack": "^4.8.1",
     "webpack-cli": "^2.1.3"
+  },
+  "engines" : {
+    "node" : "^10.0.0"
   }
 }

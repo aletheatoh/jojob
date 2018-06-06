@@ -6,6 +6,8 @@ require('dotenv').load();
 
 var app = express();
 
+    /* "start": "npm run webpack && nodemon --exec babel-node -- bin/www", */
+
 var mongoose = require('mongoose');
 //
 // app.set('view engine', 'html');
@@ -16,7 +18,7 @@ app.use(express.static(path.join(__dirname, '../src')));
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: false}));
 
-mongoose.connect(`mongodb://${process.env.REACT_APP_DB_USERNAME}:${process.env.REACT_APP_DB_PASSWORD}@ds119800.mlab.com:19800/project_4`);
+mongoose.connect(process.env.MONGOLAB_NAVY_URI ||  `mongodb://${process.env.REACT_APP_DB_USERNAME}:${process.env.REACT_APP_DB_PASSWORD}@ds119800.mlab.com:19800/project_4`);
 
 app.use('/', router);
 
