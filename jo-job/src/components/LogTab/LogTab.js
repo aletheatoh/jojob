@@ -197,7 +197,6 @@ class LogTab extends React.Component  {
         })
       }
 
-
       </Table>
       </div>
       </div>

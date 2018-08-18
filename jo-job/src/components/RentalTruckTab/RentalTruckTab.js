@@ -23,6 +23,8 @@ import { CircularProgress } from 'material-ui/Progress';
 
 import { comparePrice, compareReviews } from '../Helpers'
 
+import base_url from '..../server/server.js'
+
 import TextField from 'material-ui/TextField';
 
 import Dialog, {
@@ -168,7 +170,7 @@ class RentalTruckTab extends React.Component  {
     });
     var pickUp = this.state.pickUp;
     console.log(pickUp);
-    var endpoint = `http://localhost:8000/uhaul?pickup=${pickUp}`;
+    var endpoint = `${base_url}/uhaul?pickup=${pickUp}`;
 
     axios.get(endpoint)
     .then(response => {  // <== Change is here

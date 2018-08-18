@@ -20,6 +20,14 @@ app.use(bodyParser.urlencoded({limit: '50mb', extended: false}));
 
 mongoose.connect(process.env.MONGOLAB_NAVY_URI ||  `mongodb://${process.env.REACT_APP_DB_USERNAME}:${process.env.REACT_APP_DB_PASSWORD}@ds119800.mlab.com:19800/project_4`);
 
+const base_url = process.env.BASE_URL || process.env.ENV_URL;
+
 app.use('/', router);
+//
+// var port = 8000
+//
+// app.listen(process.env.PORT || port, function() {
+//   console.log('running at localhost: ' + port);
+// });
 
 module.exports=app;

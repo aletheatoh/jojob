@@ -29,6 +29,8 @@ import { CircularProgress } from 'material-ui/Progress';
 
 import { comparePrice, compareReviews } from '../Helpers'
 
+import base_url from '..../server/server.js'
+
 const SearchBox = styled.div`
 text-align: center;
 width: 600px;
@@ -156,7 +158,7 @@ class StorageUnitTab extends React.Component  {
     var unitSize = this.state.unitSize;
     var order = this.state.order;
 
-    var endpoint = `http://localhost:8000/sparefoot?order=${order}&unit_size=${unitSize}`;
+    var endpoint = `${base_url}/sparefoot?order=${order}&unit_size=${unitSize}`;
 
     axios.get(endpoint)
     .then(response => {  // <== Change is here

@@ -10,6 +10,7 @@ var Log = require('../../models/Log');
 var TotalCost = require('../../models/TotalCost');
 
 router.get('/', function(req, res){
+  console.log("base_url is " + base_url)
   res.render('index')
 });
 
@@ -96,7 +97,7 @@ router.get('/uhaul', async function(req, res){
 
   // await page.click(PICKUPDATE_SELECTOR);
   await page.evaluate((sel) => {
-        return document.querySelector(sel).value = '5/31/2018';
+        return document.querySelector(sel).value = '8/30/2018';
       }, PICKUPDATE_SELECTOR);
 
   await page.click(PICKUPTIME_SELECTOR);

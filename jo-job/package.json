@@ -37,7 +37,6 @@
   "scripts": {
     "webpack": "webpack",
     "start": "node bin/www",
-    "heroku-postbuild": "cd client && npm install --only=dev && npm install && npm run build",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
