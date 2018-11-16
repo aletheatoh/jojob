@@ -73,9 +73,6 @@ class LogTab extends React.Component  {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-	 // If we have a snapshot value, we've just added new items.
-	 // Adjust scroll so these new items don't push the old ones out of view.
-	 // (snapshot here is the value returned from getSnapshotBeforeUpdate)
 	 if (snapshot !== null) {
 		 console.log(snapshot)
 	 }
